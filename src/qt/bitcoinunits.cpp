@@ -38,15 +38,16 @@ bool BitcoinUnits::valid(int unit)
     }
 }
 
+
 QString BitcoinUnits::longName(int unit)
 {
     switch(unit)
     {
-    case BTC: return QString("LTC");
-    case mBTC: return QString("lites");
-    case uBTC: return QString("photons");
-    case SAT: return QString("liteoshi");
-    default: return QString("???");
+    case BTC:  return QString("USFF");
+    case mBTC: return QString("mUSFF");
+    case uBTC: return QString("uUSFF");
+    case SAT:  return QString("base");
+    default:   return QString("???");
     }
 }
 
@@ -54,9 +55,8 @@ QString BitcoinUnits::shortName(int unit)
 {
     switch(unit)
     {
-    case uBTC: return QString::fromUtf8("bits");
-    case SAT: return QString("sat");
-    default: return longName(unit);
+    case SAT: return QString("base");
+    default:  return longName(unit);
     }
 }
 
@@ -64,11 +64,11 @@ QString BitcoinUnits::description(int unit)
 {
     switch(unit)
     {
-    case BTC: return QString("Litecoins");
-    case mBTC: return QString("Lites (1 / 1" THIN_SP_UTF8 "000)");
-    case uBTC: return QString("Photons (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
-    case SAT: return QString("Liteoshis (sat) (1 / 100" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
-    default: return QString("???");
+    case BTC:  return QString("USFranc (USFF)");
+    case mBTC: return QString("Milli-USFranc (1 / 1,000)");
+    case uBTC: return QString("Micro-USFranc (1 / 1,000,000)");
+    case SAT:  return QString("Base unit (1 / 100,000,000 USFF)");
+    default:   return QString("???");
     }
 }
 
@@ -76,11 +76,11 @@ qint64 BitcoinUnits::factor(int unit)
 {
     switch(unit)
     {
-    case BTC: return 100000000;
-    case mBTC: return 100000;
-    case uBTC: return 100;
-    case SAT: return 1;
-    default: return 100000000;
+    case BTC:  return COIN;              // 100,000,000
+    case mBTC: return COIN / 1000;       // 100,000
+    case uBTC: return COIN / 1000000;    // 100
+    case SAT:  return 1;                 // smallest unit
+    default:   return COIN;
     }
 }
 

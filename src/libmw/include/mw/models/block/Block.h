@@ -50,11 +50,11 @@ public:
     const BlindingFactor& GetKernelOffset() const noexcept { return m_pHeader->GetKernelOffset(); }
     const BlindingFactor& GetStealthOffset() const noexcept { return m_pHeader->GetStealthOffset(); }
 
-    boost::optional<CAmount> GetTotalFee() const noexcept { return m_body.GetTotalFee(); }
+    CAmount GetTotalFee() const noexcept { return m_body.GetTotalFee(); }
     std::vector<PegInCoin> GetPegIns() const noexcept { return m_body.GetPegIns(); }
-    boost::optional<CAmount> GetPegInAmount() const noexcept { return m_body.GetPegInAmount(); }
+    CAmount GetPegInAmount() const noexcept { return m_body.GetPegInAmount(); }
     std::vector<PegOutCoin> GetPegOuts() const noexcept { return m_body.GetPegOuts(); }
-    boost::optional<CAmount> GetSupplyChange() const noexcept { return m_body.GetSupplyChange(); }
+    CAmount GetSupplyChange() const noexcept { return m_body.GetSupplyChange(); }
 
     //
     // Serialization/Deserialization
@@ -73,7 +73,6 @@ public:
     //
     // Context-free validation of the block.
     //
-    bool HasValidKernelMMR() const;
     void Validate() const;
 
 private:

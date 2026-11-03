@@ -75,7 +75,7 @@ public:
     const std::vector<Input>& GetInputs() const noexcept { return m_body.GetInputs(); }
     const std::vector<Output>& GetOutputs() const noexcept { return m_body.GetOutputs(); }
     const std::vector<Kernel>& GetKernels() const noexcept { return m_body.GetKernels(); }
-    boost::optional<CAmount> GetTotalFee() const noexcept { return m_body.GetTotalFee(); }
+    CAmount GetTotalFee() const noexcept { return m_body.GetTotalFee(); }
     int32_t GetLockHeight() const noexcept { return m_body.GetLockHeight(); }
     uint64_t CalcWeight() const noexcept { return (uint64_t)Weight::Calculate(m_body); }
 
@@ -83,9 +83,9 @@ public:
     std::vector<Commitment> GetInputCommits() const noexcept { return m_body.GetInputCommits(); }
     std::vector<Commitment> GetOutputCommits() const noexcept { return m_body.GetOutputCommits(); }
     std::vector<PegInCoin> GetPegIns() const noexcept { return m_body.GetPegIns(); }
-    boost::optional<CAmount> GetPegInAmount() const noexcept { return m_body.GetPegInAmount(); }
+    CAmount GetPegInAmount() const noexcept { return m_body.GetPegInAmount(); }
     std::vector<PegOutCoin> GetPegOuts() const noexcept { return m_body.GetPegOuts(); }
-    boost::optional<CAmount> GetSupplyChange() const noexcept { return m_body.GetSupplyChange(); }
+    CAmount GetSupplyChange() const noexcept { return m_body.GetSupplyChange(); }
 
     //
     // Serialization/Deserialization
@@ -113,16 +113,15 @@ public:
     bool IsStandard() const noexcept;
     void Validate() const;
     
-    std::string Print() const
+    std::string Print() const noexcept
     {
         auto print_kernel = [](const Kernel& kernel) -> std::string {
-            const auto pegout_amount = kernel.GetPegOutAmount();
             return StringUtil::Format(
                 "kern(kernel_id:{}, commit:{}, pegin: {}, pegout: {}, fee: {})",
                 kernel.GetKernelID(),
                 kernel.GetCommitment(),
                 kernel.GetPegIn(),
-                pegout_amount ? StringUtil::Format("{}", *pegout_amount) : "INVALID",
+                kernel.GetPegOutAmount(),
                 kernel.GetFee()
             );
         };

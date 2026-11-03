@@ -2,7 +2,7 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-bin_PROGRAMS += qt/litecoin-qt
+bin_PROGRAMS += qt/usfranc-qt
 
 if BUILD_BITCOIN_GUI
   bin_PROGRAMS += litecoin-gui
@@ -326,12 +326,12 @@ litecoin_qt_ldadd += $(LIBBITCOIN_CLI) $(LIBBITCOIN_COMMON) $(LIBBITCOIN_UTIL) $
 litecoin_qt_ldflags = $(RELDFLAGS) $(AM_LDFLAGS) $(QT_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) $(PTHREAD_FLAGS)
 litecoin_qt_libtoolflags = $(AM_LIBTOOLFLAGS) --tag CXX
 
-qt_litecoin_qt_CPPFLAGS = $(litecoin_qt_cppflags)
-qt_litecoin_qt_CXXFLAGS = $(litecoin_qt_cxxflags)
-qt_litecoin_qt_SOURCES = $(litecoin_qt_sources)
-qt_litecoin_qt_LDADD = $(litecoin_qt_ldadd)
-qt_litecoin_qt_LDFLAGS = $(litecoin_qt_ldflags)
-qt_litecoin_qt_LIBTOOLFLAGS = $(litecoin_qt_libtoolflags)
+qt_usfranc_qt_CPPFLAGS = $(litecoin_qt_cppflags)
+qt_usfranc_qt_CXXFLAGS = $(litecoin_qt_cxxflags)
+qt_usfranc_qt_SOURCES = $(litecoin_qt_sources)
+qt_usfranc_qt_LDADD = $(litecoin_qt_ldadd)
+qt_usfranc_qt_LDFLAGS = $(litecoin_qt_ldflags)
+qt_usfranc_qt_LIBTOOLFLAGS = $(litecoin_qt_libtoolflags)
 
 litecoin_gui_CPPFLAGS = $(litecoin_qt_cppflags)
 litecoin_gui_CXXFLAGS = $(litecoin_qt_cxxflags)
@@ -370,9 +370,9 @@ CLEAN_QT = $(nodist_qt_libbitcoinqt_a_SOURCES) $(QT_QM) $(QT_FORMS_H) qt/*.gcda 
 CLEANFILES += $(CLEAN_QT)
 
 bitcoin_qt_clean: FORCE
-	rm -f $(CLEAN_QT) $(qt_libbitcoinqt_a_OBJECTS) $(qt_litecoin_qt_OBJECTS) qt/litecoin-qt$(EXEEXT) $(LIBBITCOINQT)
+	rm -f $(CLEAN_QT) $(qt_libbitcoinqt_a_OBJECTS) $(qt_usfranc_qt_OBJECTS) qt/usfranc-qt$(EXEEXT) $(LIBBITCOINQT)
 
-bitcoin_qt : qt/litecoin-qt$(EXEEXT)
+bitcoin_qt : qt/usfranc-qt$(EXEEXT)
 
 ui_%.h: %.ui
 	@test -f $(UIC)

@@ -8,7 +8,6 @@
 
 #include <uint256.h>
 #include <limits>
-#include <vector>
 
 namespace Consensus {
 
@@ -94,18 +93,6 @@ struct Params {
     uint256 nMinimumChainWork;
     /** By default assume that the signatures in ancestors of this block are valid */
     uint256 defaultAssumeValid;
-
-    /** Optional one-block grandfather for the known MWEB input-metadata exploit. */
-    uint256 mweb_input_metadata_grandfather_blockhash;
-
-    /** MWEB kernels signaling pegouts must contain at least one pegout at and after this height. */
-    int mweb_pegout_feature_activation_height;
-
-    /** MWEB kernels signaling extra data must contain non-empty extra data at and after this height. */
-    int mweb_extradata_feature_activation_height;
-
-    /** Frozen MWEB output IDs that may not be spent. */
-    std::vector<uint256> frozen_mweb_output_ids;
 
     /**
      * If true, witness commitments contain a payload equal to a Bitcoin Script solution

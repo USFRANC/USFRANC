@@ -12,8 +12,7 @@ TxBuilder::TxBuilder()
 
 TxBuilder& TxBuilder::AddInput(const TxOutput& input)
 {
-    const SecretKey output_key = input.GetSpendKey().IsNull() ? SecretKey::Random() : input.GetSpendKey();
-    return AddInput(input.GetAmount(), output_key, input.GetBlind(), input.GetOutputID());
+    return AddInput(input.GetAmount(), SecretKey::Random(), input.GetBlind(), input.GetOutputID());
 }
 
 TxBuilder& TxBuilder::AddInput(const CAmount amount)
@@ -41,7 +40,7 @@ TxBuilder& TxBuilder::AddInput(
 
 TxBuilder& TxBuilder::AddOutput(const CAmount amount)
 {
-    return AddOutput(amount, SecretKey::Random(), SecretKey::Random(), SecretKey::Random());
+    return AddOutput(amount, SecretKey::Random(), StealthAddress::Random());
 }
 
 TxBuilder& TxBuilder::AddOutput(
@@ -58,22 +57,7 @@ TxBuilder& TxBuilder::AddOutput(
     return *this;
 }
 
-TxBuilder& TxBuilder::AddOutput(
-    const CAmount amount,
-    const SecretKey& sender_privkey,
-    const SecretKey& receiver_scan_key,
-    const SecretKey& receiver_spend_key)
-{
-    TxOutput output = TxOutput::Create(sender_privkey, receiver_scan_key, receiver_spend_key, amount);
-    m_kernelOffset.Add(output.GetBlind());
-    m_stealthOffset.Add(sender_privkey);
-
-    m_outputs.push_back(std::move(output));
-    m_amount -= (int64_t)amount;
-    return *this;
-}
-
-TxBuilder& TxBuilder::AddPlainKernel(const CAmount fee, const bool add_stealth_excess, const boost::optional<int32_t>& lock_height)
+TxBuilder& TxBuilder::AddPlainKernel(const CAmount fee, const bool add_stealth_excess)
 {
     BlindingFactor kernel_excess = BlindingFactor::Random();
     m_kernelOffset.Sub(kernel_excess);
@@ -91,7 +75,7 @@ TxBuilder& TxBuilder::AddPlainKernel(const CAmount fee, const bool add_stealth_e
         fee,
         boost::none,
         std::vector<PegOutCoin>{},
-        lock_height
+        boost::none
     );
 
     m_kernels.push_back(std::move(kernel));

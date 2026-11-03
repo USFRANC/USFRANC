@@ -20,16 +20,6 @@ void Miner::NewBlock(const uint64_t nHeight)
     hogex_outputs.clear();
 }
 
-int64_t Miner::GetHogExSigOpCost(const CTransaction& tx)
-{
-    int64_t sigops = 0;
-    for (const PegOutCoin& pegout : tx.mweb_tx.GetPegOuts()) {
-        sigops += WITNESS_SCALE_FACTOR * pegout.GetScriptPubKey().GetSigOpCount(false);
-    }
-
-    return sigops;
-}
-
 bool Miner::AddMWEBTransaction(CTxMemPool::txiter iter)
 {
     CTransactionRef pTx = iter->GetSharedTx();
@@ -81,8 +71,8 @@ bool Miner::AddMWEBTransaction(CTxMemPool::txiter iter)
     }
 
     // Validate fee amount range
-    const auto tx_fee = pTx->mweb_tx.GetFee();
-    if (!tx_fee || !MoneyRange(*tx_fee)) {
+    CAmount tx_fee = pTx->mweb_tx.GetFee();
+    if (!MoneyRange(tx_fee)) {
         LogPrintf("Invalid MWEB fee amount\n");
         return false;
     }
@@ -97,10 +87,12 @@ bool Miner::AddMWEBTransaction(CTxMemPool::txiter iter)
 
     hogex_inputs.insert(hogex_inputs.end(), vin.cbegin(), vin.cend());
     hogex_outputs.insert(hogex_outputs.end(), vout.cbegin(), vout.cend());
-    mweb_amount_change += (CAmount(pegin_amount) - CAmount(pegout_amount + *tx_fee));
+    mweb_amount_change += (CAmount(pegin_amount) - CAmount(pegout_amount + tx_fee));
 
-    hogex_fees += *tx_fee;
-    hogex_sigops += GetHogExSigOpCost(*pTx);
+    if (pTx->IsMWEBOnly()) {
+        hogex_fees += tx_fee;
+        hogex_sigops += iter->GetSigOpCost();
+    }
 
     return true;
 }
@@ -141,15 +133,20 @@ void Miner::AddHogExTransaction(const CBlockIndex* pIndexPrev, CBlock* pblock, C
     CMutableTransaction hogExTransaction;
     hogExTransaction.m_hogEx = true;
 
+    CBlock prevBlock;
+    bool read_success = ReadBlockFromDisk(prevBlock, pIndexPrev, Params().GetConsensus());
+    assert(read_success);
+
     CAmount previous_amount = 0;
 
     //
     // Add previous HogAddr as new HogEx input
     //
-    if (pIndexPrev->mweb_header != nullptr) {
-        previous_amount = pIndexPrev->mweb_amount;
+    if (prevBlock.vtx.size() >= 2 && prevBlock.vtx.back()->IsHogEx()) {
+        assert(!prevBlock.vtx.back()->vout.empty());
+        previous_amount = prevBlock.vtx.back()->vout[0].nValue;
 
-        CTxIn prevHogExIn(pIndexPrev->hogex_hash, 0);
+        CTxIn prevHogExIn(prevBlock.vtx.back()->GetHash(), 0);
         hogExTransaction.vin.push_back(std::move(prevHogExIn));
     }
 

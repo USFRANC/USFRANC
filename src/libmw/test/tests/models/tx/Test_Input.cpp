@@ -15,7 +15,7 @@ BOOST_AUTO_TEST_CASE(PlainTxInput)
     Commitment commit = Commitment::Random();
     PublicKey input_pubkey = PublicKey::Random();
     PublicKey output_pubkey = PublicKey::Random();
-    Signature signature(RandomBigInt<Signature::SIZE>());
+    Signature signature(SecretKey64::Random().GetBigInt());
     Input input(1, output_id, commit, input_pubkey, output_pubkey, signature);
 
     //

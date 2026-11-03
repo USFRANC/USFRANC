@@ -22,6 +22,7 @@
 #include <util/vector.h>
 
 #include <array>
+#include <limits>
 #include <stdint.h>
 #include <thread>
 #include <univalue.h>
@@ -1646,15 +1647,18 @@ BOOST_AUTO_TEST_CASE(test_ParseFixedPoint)
     BOOST_CHECK(!ParseFixedPoint("0.000000001", 8, &amount));
     BOOST_CHECK(!ParseFixedPoint("-0.000000001", 8, &amount));
     BOOST_CHECK(!ParseFixedPoint("0.00000001000000001", 8, &amount));
-    BOOST_CHECK(!ParseFixedPoint("-10000000000.00000000", 8, &amount));
-    BOOST_CHECK(!ParseFixedPoint("10000000000.00000000", 8, &amount));
+    BOOST_CHECK(ParseFixedPoint("-10000000000.00000000", 8, &amount));
+    BOOST_CHECK_EQUAL(amount, -1000000000000000000LL);
+    BOOST_CHECK(ParseFixedPoint("10000000000.00000000", 8, &amount));
+    BOOST_CHECK_EQUAL(amount, 1000000000000000000LL);
     BOOST_CHECK(!ParseFixedPoint("-10000000000.00000001", 8, &amount));
     BOOST_CHECK(!ParseFixedPoint("10000000000.00000001", 8, &amount));
     BOOST_CHECK(!ParseFixedPoint("-10000000000.00000009", 8, &amount));
     BOOST_CHECK(!ParseFixedPoint("10000000000.00000009", 8, &amount));
     BOOST_CHECK(!ParseFixedPoint("-99999999999.99999999", 8, &amount));
     BOOST_CHECK(!ParseFixedPoint("99999909999.09999999", 8, &amount));
-    BOOST_CHECK(!ParseFixedPoint("92233720368.54775807", 8, &amount));
+    BOOST_CHECK(ParseFixedPoint("92233720368.54775807", 8, &amount));
+    BOOST_CHECK_EQUAL(amount, std::numeric_limits<int64_t>::max());
     BOOST_CHECK(!ParseFixedPoint("92233720368.54775808", 8, &amount));
     BOOST_CHECK(!ParseFixedPoint("-92233720368.54775808", 8, &amount));
     BOOST_CHECK(!ParseFixedPoint("-92233720368.54775809", 8, &amount));

@@ -9,7 +9,7 @@
 /* #undef AC_APPLE_UNIVERSAL_BUILD */
 
 /* Version Build */
-#define CLIENT_VERSION_BUILD 8
+#define CLIENT_VERSION_BUILD 0
 
 /* Version is release */
 #define CLIENT_VERSION_IS_RELEASE true
@@ -21,19 +21,19 @@
 #define CLIENT_VERSION_MINOR 21
 
 /* Build revision */
-#define CLIENT_VERSION_REVISION 5
+#define CLIENT_VERSION_REVISION 3
 
 /* Copyright holder(s) before %s replacement */
 #define COPYRIGHT_HOLDERS "The %s developers"
 
 /* Copyright holder(s) */
-#define COPYRIGHT_HOLDERS_FINAL "The Litecoin Core developers"
+#define COPYRIGHT_HOLDERS_FINAL "The USFranc Core developers"
 
 /* Replacement for %s in copyright holders string */
-#define COPYRIGHT_HOLDERS_SUBSTITUTION "Litecoin Core"
+#define COPYRIGHT_HOLDERS_SUBSTITUTION "USFranc Core"
 
 /* Copyright year */
-#define COPYRIGHT_YEAR 2026
+#define COPYRIGHT_YEAR 2024
 
 /* Define to 1 to enable wallet functions */
 #define ENABLE_WALLET 1
@@ -247,22 +247,22 @@
 #define LT_OBJDIR ".libs/"
 
 /* Define to the address where bug reports for this package should be sent. */
-#define PACKAGE_BUGREPORT "https://github.com/litecoin-project/litecoin/issues"
+#define PACKAGE_BUGREPORT "https://github.com/usfranc-project/usfranc/issues"
 
 /* Define to the full name of this package. */
-#define PACKAGE_NAME "Litecoin Core"
+#define PACKAGE_NAME "USFranc Core"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "Litecoin Core 0.21.5.8"
+#define PACKAGE_STRING "USFranc Core 0.21.3"
 
 /* Define to the one symbol short name of this package. */
-#define PACKAGE_TARNAME "litecoin"
+#define PACKAGE_TARNAME "usfranc"
 
 /* Define to the home page for this package. */
-#define PACKAGE_URL "https://litecoin.org/"
+#define PACKAGE_URL "https://usfranc.com/"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "0.21.5.8"
+#define PACKAGE_VERSION "0.21.3"
 
 /* Define to necessary symbol if this constant uses a non-standard name on
    your system. */

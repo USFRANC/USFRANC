@@ -37,9 +37,8 @@ uint64_t PruneList::GetShift(const LeafIndex& index) const noexcept
 
 void PruneList::Commit(const uint32_t file_index, const BitSet& compacted)
 {
-    File file(GetPath(m_dir, file_index));
-    file.Write(compacted.bytes());
-    file.Commit();
+    File(GetPath(m_dir, file_index))
+        .Write(compacted.bytes());
 
     m_compacted = compacted;
     m_totalShift = compacted.count();

@@ -602,8 +602,7 @@ static void entryToJSON(const CTxMemPool& pool, UniValue& info, const CTxMemPool
         mweb_weight.pushKV("descendant", (int)e.GetMWEBWeightWithDescendants());
         mweb_info.pushKV("weight", mweb_weight);
 
-        const auto mweb_fee = tx.mweb_tx.GetFee();
-        mweb_info.pushKV("fee", mweb_fee ? ValueFromAmount(*mweb_fee) : UniValue(UniValue::VNULL));
+        mweb_info.pushKV("fee", ValueFromAmount(tx.mweb_tx.GetFee()));
         mweb_info.pushKV("lock_height", tx.mweb_tx.GetLockHeight());
 
         // Pegins
@@ -920,11 +919,6 @@ static RPCHelpMan getmempoolentry()
     CTxMemPool::txiter it = mempool.mapTx.find(hash);
     if (it == mempool.mapTx.end()) {
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Transaction not in mempool");
-    }
-
-    if (RPCSerializationFlags() & SERIALIZE_NO_MWEB && it->GetTx().IsMWEBOnly()) {
-        // Don't return MWEB-only transactions to clients that don't support them.
-        throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "MWEB-only transaction not serializable for rpcserialversion<2");
     }
 
     const CTxMemPoolEntry &e = *it;
@@ -1288,8 +1282,8 @@ static RPCHelpMan gettxout()
                                 {RPCResult::Type::STR_HEX, "hex", ""},
                                 {RPCResult::Type::NUM, "reqSigs", "Number of required signatures"},
                                 {RPCResult::Type::STR_HEX, "type", "The type, eg pubkeyhash"},
-                                {RPCResult::Type::ARR, "addresses", "array of litecoin addresses",
-                                    {{RPCResult::Type::STR, "address", "litecoin address"}}},
+                                {RPCResult::Type::ARR, "addresses", "array of usfranc addresses",
+                                    {{RPCResult::Type::STR, "address", "usfranc address"}}},
                             }},
                         {RPCResult::Type::BOOL, "coinbase", "Coinbase or not"},
                     }},

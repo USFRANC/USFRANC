@@ -42,9 +42,7 @@ BOOST_AUTO_TEST_CASE(TxTransaction)
     // Getters
     //
     {
-        const auto total_fee = tx->GetTotalFee();
-        BOOST_REQUIRE(total_fee.has_value());
-        BOOST_REQUIRE(*total_fee == fee);
+        BOOST_REQUIRE(tx->GetTotalFee() == fee);
     }
 }
 

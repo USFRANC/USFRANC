@@ -46,7 +46,6 @@ public:
     static PublicKey From(const Commitment& commitment);
     static PublicKey Random();
 
-    bool IsValid() const noexcept;
     const BigInt<33>& GetBigInt() const { return m_compressed; }
     CKeyID GetID() const { return CPubKey(vec()).GetID(); }
     std::array<uint8_t, 33> array() const { return m_compressed.ToArray(); }

@@ -1,4 +1,5 @@
 #include <mw/node/BlockBuilder.h>
+#include <mw/consensus/KernelSumValidator.h>
 #include <mw/consensus/Params.h>
 #include <mw/consensus/Weight.h>
 
@@ -9,13 +10,6 @@ MW_NAMESPACE
 
 bool BlockBuilder::AddTransaction(const Transaction::CPtr& pTransaction, const std::vector<PegInCoin>& pegins)
 {
-    // Check input count
-    const size_t num_inputs = pTransaction->GetInputs().size();
-    if ((num_inputs + m_num_inputs) > mw::MAX_NUM_INPUTS) {
-        LOG_ERROR("Exceeds max input count");
-        return false;
-    }
-
     // Check weight
     uint64_t weight = Weight::Calculate(pTransaction->GetBody());
     if ((weight + m_weight) > mw::MAX_BLOCK_WEIGHT) {
@@ -24,16 +18,11 @@ bool BlockBuilder::AddTransaction(const Transaction::CPtr& pTransaction, const s
     }
     
     // Verify pegin amount matches
-    const auto actual_amount = pTransaction->GetPegInAmount();
-    if (!actual_amount) {
-        LOG_ERROR("Invalid pegin amount");
-        return false;
-    }
-
-    const CAmount expected_amount = std::accumulate(pegins.cbegin(), pegins.cend(), (CAmount)0,
-        [](const CAmount sum, const PegInCoin& pegin) { return sum + pegin.GetAmount(); }
+    const uint64_t actual_amount = pTransaction->GetPegInAmount();
+    const uint64_t expected_amount = std::accumulate(pegins.cbegin(), pegins.cend(), (uint64_t)0,
+        [](const uint64_t sum, const PegInCoin& pegin) { return sum + pegin.GetAmount(); }
     );
-    if (*actual_amount != expected_amount) {
+    if (actual_amount != expected_amount) {
         LOG_ERROR("Mismatched pegin amount");
         return false;
     }
@@ -71,28 +60,19 @@ bool BlockBuilder::AddTransaction(const Transaction::CPtr& pTransaction, const s
         return false;
     }
     
-    // Kernel IDs must remain unique in the aggregate block body.
-    for (const Kernel& kernel : pTransaction->GetKernels()) {
-        if (m_stagedKernels.count(kernel.GetKernelID()) > 0) {
-            LOG_ERROR_F("Kernel {} already staged", kernel.GetKernelID());
-            return false;
-        }
-    }
-
-    // Individually valid transactions can still form unrepresentable group
-    // identities when aggregated. Extend the validated sums using only the
-    // candidate so template construction remains linear in the body size.
-    KernelSumValidator::SumState kernel_sums;
-    StealthSumValidator::SumState stealth_sums;
     try {
-        kernel_sums = KernelSumValidator::ValidateAndAdd(*pTransaction, m_kernelSums);
-        stealth_sums = StealthSumValidator::ValidateAndAdd(
-            pTransaction->GetStealthOffset(),
-            pTransaction->GetBody(),
-            m_stealthSums
-        );
-    } catch (const std::exception& e) {
-        LOG_ERROR_F("Transaction is incompatible with staged MWEB transactions. Error: {}", e.what());
+        std::vector<Commitment> input_commits = pTransaction->GetInputCommits();
+        std::vector<Commitment> output_commits = pTransaction->GetOutputCommits();
+        for (const auto& tx : m_stagedTxs) {
+            std::vector<Commitment> staged_tx_input_commits = tx->GetInputCommits();
+            input_commits.insert(input_commits.end(), staged_tx_input_commits.begin(), staged_tx_input_commits.end());
+            std::vector<Commitment> staged_tx_output_commits = tx->GetOutputCommits();
+            output_commits.insert(output_commits.end(), staged_tx_output_commits.begin(), staged_tx_output_commits.end());
+        }
+        Commitment commit = Pedersen::AddCommitments(input_commits, output_commits);
+        assert(!commit.IsZero());
+    } catch (std::exception& e) {
+        LOG_ERROR_F("Staged inputs and outputs would sum to zero. Error: {}", e.what());
         return false;
     }
 
@@ -124,20 +104,11 @@ bool BlockBuilder::AddTransaction(const Transaction::CPtr& pTransaction, const s
 
     m_stagedTxs.push_back(pTransaction);
     m_weight += weight;
-    m_num_inputs += num_inputs;
 
     for (const Output& output : pTransaction->GetOutputs()) {
         auto inserted = m_stagedOutputs.insert(output.GetOutputID());
         assert(inserted.second);
     }
-
-    for (const Kernel& kernel : pTransaction->GetKernels()) {
-        auto inserted = m_stagedKernels.insert(kernel.GetKernelID());
-        assert(inserted.second);
-    }
-
-    m_kernelSums = std::move(kernel_sums);
-    m_stealthSums = std::move(stealth_sums);
 
     return true;
 }

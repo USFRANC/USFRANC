@@ -11,7 +11,6 @@ enum class EConsensusError
     DUPLICATES,
     BLOCK_WEIGHT,
     BLOCK_SUMS,
-    AMOUNT_OUT_OF_RANGE,
     STEALTH_SUMS,
     INVALID_SIG,
     BULLETPROOF,
@@ -21,7 +20,6 @@ enum class EConsensusError
     UTXO_MISSING,
     UTXO_MISMATCH,
     NOT_SORTED,
-    LOCK_HEIGHT,
     BAD_STATE
 };
 
@@ -52,8 +50,6 @@ private:
                 return "BLOCK_WEIGHT";
             case EConsensusError::BLOCK_SUMS:
                 return "BLOCK_SUMS";
-            case EConsensusError::AMOUNT_OUT_OF_RANGE:
-                return "AMOUNT_OUT_OF_RANGE";
             case EConsensusError::STEALTH_SUMS:
                 return "STEALTH_SUMS";
             case EConsensusError::INVALID_SIG:
@@ -72,8 +68,6 @@ private:
                 return "UTXO_MISMATCH";
             case EConsensusError::NOT_SORTED:
                 return "NOT_SORTED";
-            case EConsensusError::LOCK_HEIGHT:
-                return "LOCK_HEIGHT";
             case EConsensusError::BAD_STATE:
                 return "BAD_STATE";
         }

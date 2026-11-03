@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2014-2022 The Litecoin Core developers
+# Copyright (c) 2026 The USFranc Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Random assortment of utility functions"""
@@ -130,12 +130,12 @@ mweb_hash - The hash of the MWEB to commit to.
 
 Returns the built HogEx transaction as a 'CTransaction'
 """
-def create_hogex(node, mweb_hash, amount=None):
+def create_hogex(node, mweb_hash):
     hogex_tx = get_hogex_tx(node)
 
     tx = CTransaction()
     tx.vin = [CTxIn(COutPoint(hogex_tx.sha256, 0))]
-    tx.vout = [CTxOut(hogex_tx.vout[0].nValue if amount is None else amount, hogaddr_script(mweb_hash.to_byte_arr()))]
+    tx.vout = [CTxOut(hogex_tx.vout[0].nValue, hogaddr_script(mweb_hash.to_byte_arr()))]
     tx.hogex = True
     tx.rehash()
     return tx
@@ -152,7 +152,7 @@ def create_non_hd_wallet(chain, options):
     data_dir = get_datadir_path(options.tmpdir, 10)
 
     # adjust conf for pre 17
-    conf_file = os.path.join(data_dir, 'litecoin.conf')
+    conf_file = os.path.join(data_dir, 'usfranc.conf')
     with open(conf_file, 'r', encoding='utf8') as conf:
         conf_data = conf.read()
     with open(conf_file, 'w', encoding='utf8') as conf:
@@ -165,8 +165,8 @@ def create_non_hd_wallet(chain, options):
         rpchost=None,
         timewait=60,
         timeout_factor=1.0,
-        bitcoind=os.path.join(bin_dir, 'litecoind'),
-        bitcoin_cli=os.path.join(bin_dir, 'litecoin-cli'),
+        bitcoind=os.path.join(bin_dir, 'usfrancd'),
+        bitcoin_cli=os.path.join(bin_dir, 'usfranc-cli'),
         version=version,
         coverage_dir=None,
         cwd=options.tmpdir,

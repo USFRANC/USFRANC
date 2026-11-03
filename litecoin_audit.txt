@@ -1,0 +1,50 @@
+./src/Makefile.qt.include:8:  bin_PROGRAMS += litecoin-gui
+./src/Makefile.qt.include:195:  qt/res/icons/litecoin_splash.png \
+./src/Makefile.qt.include:308:litecoin_qt_cppflags = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(BITCOIN_QT_INCLUDES) \
+./src/Makefile.qt.include:310:litecoin_qt_cxxflags = $(AM_CXXFLAGS) $(QT_PIE_FLAGS)
+./src/Makefile.qt.include:312:litecoin_qt_sources = qt/main.cpp
+./src/Makefile.qt.include:314:  litecoin_qt_sources += $(BITCOIN_RC)
+./src/Makefile.qt.include:316:litecoin_qt_ldadd = qt/libbitcoinqt.a $(LIBBITCOIN_SERVER)
+./src/Makefile.qt.include:318:litecoin_qt_ldadd += $(LIBBITCOIN_UTIL) $(LIBBITCOIN_WALLET)
+./src/Makefile.qt.include:321:litecoin_qt_ldadd += $(LIBBITCOIN_ZMQ) $(ZMQ_LIBS)
+./src/Makefile.qt.include:323:litecoin_qt_ldadd += $(LIBBITCOIN_CLI) $(LIBBITCOIN_COMMON) $(LIBBITCOIN_UTIL) $(LIBBITCOIN_CONSENSUS) $(LIBBITCOIN_CRYPTO) $(LIBUNIVALUE) $(LIBLEVELDB) $(LIBLEVELDB_SSE42) $(LIBMEMENV) \
+./src/Makefile.qt.include:326:litecoin_qt_ldflags = $(RELDFLAGS) $(AM_LDFLAGS) $(QT_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) $(PTHREAD_FLAGS)
+./src/Makefile.qt.include:327:litecoin_qt_libtoolflags = $(AM_LIBTOOLFLAGS) --tag CXX
+./src/Makefile.qt.include:329:qt_usfranc_qt_CPPFLAGS = $(litecoin_qt_cppflags)
+./src/Makefile.qt.include:330:qt_usfranc_qt_CXXFLAGS = $(litecoin_qt_cxxflags)
+./src/Makefile.qt.include:331:qt_usfranc_qt_SOURCES = $(litecoin_qt_sources)
+./src/Makefile.qt.include:332:qt_usfranc_qt_LDADD = $(litecoin_qt_ldadd)
+./src/Makefile.qt.include:333:qt_usfranc_qt_LDFLAGS = $(litecoin_qt_ldflags)
+./src/Makefile.qt.include:334:qt_usfranc_qt_LIBTOOLFLAGS = $(litecoin_qt_libtoolflags)
+./src/Makefile.qt.include:336:litecoin_gui_CPPFLAGS = $(litecoin_qt_cppflags)
+./src/Makefile.qt.include:337:litecoin_gui_CXXFLAGS = $(litecoin_qt_cxxflags)
+./src/Makefile.qt.include:338:litecoin_gui_SOURCES = $(litecoin_qt_sources)
+./src/Makefile.qt.include:339:litecoin_gui_LDADD = $(litecoin_qt_ldadd)
+./src/Makefile.qt.include:340:litecoin_gui_LDFLAGS = $(litecoin_qt_ldflags)
+./src/Makefile.qt.include:341:litecoin_gui_LIBTOOLFLAGS = $(litecoin_qt_libtoolflags)
+./src/qt/bitcoin.qrc:4:        <file alias="litecoin_splash">res/icons/litecoin_splash.png</file>
+./src/qt/networkstyle.cpp:37:        pixmap.load(":/icons/litecoin_splash");
+./contrib/gitian-descriptors/assign_DISTNAME:12:DISTNAME="litecoin-${VERSION}"
+./share/setup.nsi.in:102:    WriteRegStr HKCU "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" DisplayIcon $INSTDIR\litecoin-qt.exe
+./share/rpcauth/rpcauth.py:41:    print('String to be appended to litecoin.conf:')
+./share/qt/Info.plist.in:41:  <string>org.litecoin.Litecoin-Qt</string>
+./share/qt/Info.plist.in:49:      <string>org.litecoin.LitecoinPayment</string>
+./share/qt/Info.plist.in:52:        <string>litecoin</string>
+./share/examples/litecoin.conf:2:## litecoin.conf configuration file. Lines beginning with # are comments.
+./share/examples/litecoin.conf:70:# JSON-RPC options (for controlling a running Litecoin/litecoind process)
+./share/examples/litecoin.conf:73:# server=1 tells Litecoin-Qt and litecoind to accept JSON-RPC commands
+./share/examples/litecoin.conf:77:# Refer to the manpage or litecoind -help for further details.
+./share/examples/litecoin.conf:81:# is .cookie and found in the `-datadir` being used for litecoind. This option is typically used
+./share/examples/litecoin.conf:90:# String to be appended to litecoin.conf:
+./share/examples/litecoin.conf:102:# How many seconds litecoin will wait for a complete RPC HTTP request.
+./share/examples/litecoin.conf:114:# it is also read by litecoind to determine if RPC should be enabled
+./share/examples/litecoin.conf:122:# You can use Litecoin or litecoind to send commands to Litecoin/litecoind
+./share/examples/litecoin.conf:136:# Pay a transaction fee every time you send litecoins.
+./ci/test/06_script_b.sh:41:  DOCKER_EXEC ${TEST_RUNNER_ENV} DIR_UNIT_TEST_DATA=${DIR_UNIT_TEST_DATA} LD_LIBRARY_PATH=$DEPENDS_DIR/$HOST/lib "${BASE_BUILD_DIR}/litecoin-*/src/test/test_litecoin*" --catch_system_errors=no -l test_suite
+./ci/test/00_setup_env_native_multiprocess.sh:15:export TEST_RUNNER_ENV="BITCOIND=litecoin-node"
+./test/get_previous_releases.py:74:    release_path = 'litecoin-{}'.format(tag[1:])
+./test/get_previous_releases.py:76:    tarball = 'litecoin-{tag}-{platform}.tar.gz'.format(
+./test/get_previous_releases.py:78:    tarballUrl = 'https://download.litecoin.org/{release_path}/{os}/{tarball}'.format(
+./test/get_previous_releases.py:111:                          'litecoin-{tag}'.format(tag=tag[1:])]).returncode
+./test/functional/test_framework/messages.py:32:import litecoin_scrypt
+./test/functional/test_framework/messages.py:766:            self.scrypt256 = uint256_from_str(litecoin_scrypt.getPoWHash(r))

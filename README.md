@@ -65,3 +65,9 @@ Changes should be tested by somebody other than the developer who wrote the
 code. This is especially important for large or high-risk changes. It is useful
 to add a test plan to the pull request description if testing the changes is
 not straightforward.
+
+Documentation & Security
+------------------------
+
+* **White Paper:** [Universal_Standard_Franc_USFF_White_Paper_v1.1.md](Universal_Standard_Franc_USFF_White_Paper_v1.1.md)
+* **Security Policy:** [SECURITY.md](SECURITY.md)

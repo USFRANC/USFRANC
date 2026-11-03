@@ -1,0 +1,7 @@
+* text=auto eol=lf
+*.sh text eol=lf
+*.ac text eol=lf
+*.am text eol=lf
+*.m4 text eol=lf
+*.py text eol=lf
+src/clientversion.cpp export-subst

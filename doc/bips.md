@@ -1,4 +1,4 @@
-BIPs that are implemented by Bitcoin Core (up-to-date up to **v0.21.1**):
+BIPs that are implemented by USFranc Core (active from Genesis Block 0 on the USFranc network):
 
 * [`BIP 9`](https://github.com/bitcoin/bips/blob/master/bip-0009.mediawiki): The changes allowing multiple soft-forks to be deployed in parallel have been implemented since **v0.12.1**  ([PR #7575](https://github.com/bitcoin/bitcoin/pull/7575))
 * [`BIP 11`](https://github.com/bitcoin/bips/blob/master/bip-0011.mediawiki): Multisig outputs are standard since **v0.6.0** ([PR #669](https://github.com/bitcoin/bitcoin/pull/669)).
@@ -51,8 +51,8 @@ BIPs that are implemented by Bitcoin Core (up-to-date up to **v0.21.1**):
 
 ------------------
 
-LIPs implemented by Litecoin Core (up-to-date up to v0.21.3)
-* [`LIP002`](https://github.com/litecoin-project/lips/blob/master/lip-0002.mediawiki): Extension blocks as a mechanism to implement new protocols to Litecoin without relaxing any consensus rules.
+LIPs implemented by USFranc Core (inherited from upstream Litecoin Core v0.21.3, active from Genesis Block 0)
+* [`LIP002`](https://github.com/litecoin-project/lips/blob/master/lip-0002.mediawiki): Extension blocks as a mechanism to implement new protocols to USFranc without relaxing any consensus rules.
 * [`LIP003`](https://github.com/litecoin-project/lips/blob/master/lip-0003.mediawiki): Opt-in MimbleWimble through Extension Blocks.
 * [`LIP004`](https://github.com/litecoin-project/lips/blob/master/lip-0004.mediawiki): One sided MimbleWimble transactions without needing to build a transaction interactively with the receiving party. 
 * [`LIP006`](https://github.com/litecoin-project/lips/blob/c01068d06136fb21bf35fd6dac2977de60057714/LIP-0006.mediawiki): New p2p messages for supporting light-client syncing of MWEB components.

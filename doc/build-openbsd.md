@@ -1,8 +1,8 @@
 OpenBSD build guide
 ======================
-(updated for OpenBSD 6.7)
+(updated for OpenBSD 6.7+)
 
-This guide describes how to build litecoind, litecoin-qt, and command-line utilities on OpenBSD.
+This guide describes how to build `usfrancd`, `usfranc-qt`, and command-line utilities on OpenBSD.
 
 Preparation
 -------------
@@ -16,7 +16,7 @@ pkg_add autoconf # (select highest version, e.g. 2.69)
 pkg_add automake # (select highest version, e.g. 1.16)
 pkg_add python # (select highest version, e.g. 3.8)
 
-git clone https://github.com/litecoin-project/litecoin.git
+git clone https://github.com/USFRANC-CORE/usfranc.git
 ```
 
 See [dependencies.md](dependencies.md) for a complete overview.
@@ -47,7 +47,7 @@ from the root of the repository. Then set `BDB_PREFIX` for the next section:
 export BDB_PREFIX="$PWD/db4"
 ```
 
-### Building Litecoin Core
+### Building USFranc Core
 
 **Important**: Use `gmake` (the non-GNU `make` will exit with an error).
 
@@ -92,24 +92,3 @@ Build and run the tests:
 gmake # use -jX here for parallelism
 gmake check
 ```
-
-Resource limits
--------------------
-
-If the build runs into out-of-memory errors, the instructions in this section
-might help.
-
-The standard ulimit restrictions in OpenBSD are very strict:
-
-    data(kbytes)         1572864
-
-This is, unfortunately, in some cases not enough to compile some `.cpp` files in the project,
-(see issue [#6658](https://github.com/bitcoin/bitcoin/issues/6658)).
-If your user is in the `staff` group the limit can be raised with:
-
-    ulimit -d 3000000
-
-The change will only affect the current shell and processes spawned by it. To
-make the change system-wide, change `datasize-cur` and `datasize-max` in
-`/etc/login.conf`, and reboot.
-

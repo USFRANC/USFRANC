@@ -1,109 +1,40 @@
-0.21.2 Release Notes
-====================
+USFranc Core v0.1.0 Release Notes
+=================================
 
-Bitcoin Core version 0.21.2 is now available from:
+USFranc Core (`USFrancCore`) version `0.1.0` (derived from `0.21.2.2` core architecture, protocol version `70017`) is the official reference implementation of the Universal Standard Franc (`USFF`) Layer-1 blockchain.
 
-  <https://bitcoincore.org/bin/bitcoin-core-0.21.2/>
-
-This minor release includes various bug fixes and performance
-improvements, as well as updated translations.
+Official website: <https://usfranc.com/>
 
 Please report bugs using the issue tracker at GitHub:
 
-  <https://github.com/bitcoin/bitcoin/issues>
-
-To receive security and update notifications, please subscribe to:
-
-  <https://bitcoincore.org/en/list/announcements/join/>
+  <https://github.com/USFRANC-CORE/usfranc/issues>
 
 How to Upgrade
 ==============
 
 If you are running an older version, shut it down. Wait until it has completely
 shut down (which might take a few minutes in some cases), then run the
-installer (on Windows) or just copy over `/Applications/Bitcoin-Qt` (on Mac)
-or `bitcoind`/`bitcoin-qt` (on Linux).
-
-Upgrading directly from a version of Bitcoin Core that has reached its EOL is
-possible, but it might take some time if the data directory needs to be migrated. Old
-wallet versions of Bitcoin Core are generally supported.
+installer (on Windows) or copy over `/Applications/USFranc-Qt` (on macOS)
+or `usfrancd`/`usfranc-qt` (on Linux).
 
 Compatibility
 ==============
 
-Bitcoin Core is supported and extensively tested on operating systems
-using the Linux kernel, macOS 10.12+, and Windows 7 and newer.  Bitcoin
-Core should also work on most other Unix-like systems but is not as
-frequently tested on them.  It is not recommended to use Bitcoin Core on
-unsupported systems.
+USFranc Core is supported and tested on operating systems
+using the Linux kernel, macOS 10.14+, and Windows 10 and newer. USFranc
+Core should also work on most other Unix-like systems.
 
-From Bitcoin Core 0.20.0 onwards, macOS versions earlier than 10.12 are no
-longer supported. Additionally, Bitcoin Core does not yet change appearance
-when macOS "dark mode" is activated.
+v0.1.0 Network & Consensus Specifications
+=========================================
 
-
-0.21.2 change log
-=================
-
-### P2P protocol and network code
-
-- #21644 use NetPermissions::HasFlag() in CConnman::Bind() (jonatack)
-- #22569 Rate limit the processing of rumoured addresses (sipa)
-
-### Wallet
-
-- #21907 Do not iterate a directory if having an error while accessing it (hebasto)
-
-### RPC
-
-- #19361 Reset scantxoutset progress before inferring descriptors (prusnak)
-
-### Build System
-
-- #21932 depends: update Qt 5.9 source url (kittywhiskers)
-- #22017 Update Windows code signing certificate (achow101)
-- #22191 Use custom MacOS code signing tool (achow101)
-- #22713 Fix build with Boost 1.77.0 (sizeofvoid)
-
-### Tests and QA
-
-- #20182 Build with --enable-werror by default, and document exceptions (hebasto)
-- #20535 Fix intermittent feature_taproot issue (MarcoFalke)
-- #21663 Fix macOS brew install command (hebasto)
-- #22279 add missing ECCVerifyHandle to base_encode_decode (apoelstra)
-- #22730 Run fuzzer task for the master branch only (hebasto)
-
-### GUI
-
-- #277 Do not use QClipboard::Selection on Windows and macOS. (hebasto)
-- #280 Remove user input from URI error message (prayank23)
-- #365 Draw "eye" sign at the beginning of watch-only addresses (hebasto)
-
-### Miscellaneous
-
-- #22002 Fix crash when parsing command line with -noincludeconf=0 (MarcoFalke)
-- #22137 util: Properly handle -noincludeconf on command line (take 2) (MarcoFalke)
-
-
-Credits
-=======
-
-Thanks to everyone who directly contributed to this release:
-
-- Andrew Chow
-- Andrew Poelstra
-- fanquake
-- Hennadii Stepanov
-- Jon Atack
-- Kittywhiskers Van Gogh
-- Luke Dashjr
-- MarcoFalke
-- Pavol Rusnak
-- Pieter Wuille
-- prayank23
-- Rafael Sadowski
-- W. J. van der Laan
-
-
-As well as to everyone that helped with translations on
-[Transifex](https://www.transifex.com/bitcoin/bitcoin/).
+- **Asset Name & Ticker:** Universal Standard Franc (`USFF`)
+- **Consensus Algorithm:** Proof-of-Work Scrypt ($N=1024, r=1, p=1$)
+- **Target Block Time:** 150 seconds (2.5 minutes)
+- **Difficulty Adjustment:** Every 2,016 blocks (302,400 seconds / 3.5 days)
+- **Maximum Supply (`MAX_MONEY`):** 90,000,000,000 USFF (100% issued at Block 1; 0 ongoing block subsidy from Block 2+)
+- **Coinbase Maturity:** 100 blocks
+- **Genesis Block Hash:** `0xd0305d20bf497f5d4943d54c6a711dfab305368be023454c23e52794a1fdaed4`
+- **Genesis Merkle Root:** `0x791624844c46b68572e0cd521f65e7518c10c2734647521a50c5e18dcf0c7c6b`
+- **Mainnet Ports:** P2P `19777` | RPC `9332` | Tor `9333`
+- **Address Prefixes (Mainnet):** P2PKH `U` (`68`), P2SH `M` (`50`) / `3` (`5`), Bech32 `usff1q` (`usff`)
+- **Softforks Active from Block 0:** BIP16, BIP34, BIP65, BIP66, CSV (BIP68/112/113), SegWit (BIP141/143/147)

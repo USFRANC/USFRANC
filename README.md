@@ -1,48 +1,44 @@
-Litecoin Core integration/staging tree
+USFranc Core integration/staging tree
 =====================================
 
-[![Build Status](https://travis-ci.org/litecoin-project/litecoin.svg?branch=master)](https://travis-ci.org/litecoin-project/litecoin)
+https://usfranc.com
 
-https://litecoin.org
-
-What is Litecoin?
+What is USFranc?
 ----------------
 
-Litecoin is an experimental digital currency that enables instant payments to
-anyone, anywhere in the world. Litecoin uses peer-to-peer technology to operate
-with no central authority: managing transactions and issuing money are carried
-out collectively by the network. Litecoin Core is the name of open source
-software which enables the use of this currency.
+USFranc (Universal Standard Franc, ticker: `USFF`) is a decentralized Layer-1 digital currency that enables fast, secure peer-to-peer payments to anyone, anywhere in the world. USFranc uses peer-to-peer UTXO technology and Scrypt Proof-of-Work consensus to operate with no central authority: managing transactions and validating blocks are carried out collectively by the network. USFranc Core (`USFrancCore`) is the name of the open source reference software which enables the use of this currency.
 
-For more information, as well as an immediately useable, binary version of
-the Litecoin Core software, see [https://litecoin.org](https://litecoin.org).
+### Core Specifications
+
+* **Ticker Symbol:** `USFF`
+* **Consensus Algorithm:** Proof-of-Work (Scrypt: $N=1024, r=1, p=1$)
+* **Target Block Time:** 150 seconds (2.5 minutes)
+* **Difficulty Retargeting:** Every 2,016 blocks (302,400 seconds / 3.5 days)
+* **Maximum Supply:** 90,000,000,000 USFF (100% issued at Block 1; 0 ongoing block subsidy)
+* **Decimal Precision:** 8 decimal places (`1 USFF = 100,000,000` base units)
+* **Default Ports (Mainnet):** P2P `19777` | RPC `9332` | Tor `9333`
+* **Address Formats (Mainnet):**
+  * Legacy P2PKH: starts with `U` (prefix `68`)
+  * SegWit P2SH: starts with `M` (prefix `50`) / Legacy P2SH `3` (prefix `5`)
+  * Native SegWit Bech32: starts with `usff1q` (HRP `usff`)
+
+For more information, as well as binary builds of the USFranc Core software, see [https://usfranc.com](https://usfranc.com).
 
 License
 -------
 
-Litecoin Core is released under the terms of the MIT license. See [COPYING](COPYING) for more
+USFranc Core is released under the terms of the MIT license. See [COPYING](COPYING) for more
 information or see https://opensource.org/licenses/MIT.
 
 Development Process
 -------------------
 
 The `master` branch is regularly built (see `doc/build-*.md` for instructions) and tested, but it is not guaranteed to be
-completely stable. [Tags](https://github.com/litecoin-project/litecoin/tags) are created
-regularly from release branches to indicate new official, stable release versions of Litecoin Core.
-
-The https://github.com/litecoin-project/gui repository is used exclusively for the
-development of the GUI. Its master branch is identical in all monotree
-repositories. Release branches and tags do not exist, so please do not fork
-that repository unless it is for development reasons.
+completely stable. [Tags](https://github.com/USFRANC-CORE/usfranc/tags) are created
+regularly from release branches to indicate new official, stable release versions of USFranc Core.
 
 The contribution workflow is described in [CONTRIBUTING.md](CONTRIBUTING.md)
 and useful hints for developers can be found in [doc/developer-notes.md](doc/developer-notes.md).
-
-The developer [mailing list](https://groups.google.com/forum/#!forum/litecoin-dev)
-should be used to discuss complicated or controversial changes before working
-on a patch set.
-
-Developer IRC can be found on Freenode at #litecoin-dev.
 
 Testing
 -------
@@ -63,23 +59,9 @@ There are also [regression and integration tests](/test), written
 in Python, that are run automatically on the build server.
 These tests can be run (if the [test dependencies](/test) are installed) with: `test/functional/test_runner.py`
 
-The Travis CI system makes sure that every pull request is built for Windows, Linux, and macOS, and that unit/sanity tests are run automatically.
-
 ### Manual Quality Assurance (QA) Testing
 
 Changes should be tested by somebody other than the developer who wrote the
 code. This is especially important for large or high-risk changes. It is useful
 to add a test plan to the pull request description if testing the changes is
 not straightforward.
-
-Translations
-------------
-
-We only accept translation fixes that are submitted through [Bitcoin Core's Transifex page](https://explore.transifex.com/bitcoin/bitcoin/).
-Translations are converted to Litecoin periodically.
-
-Translations are periodically pulled from Transifex and merged into the git repository. See the
-[translation process](doc/translation_process.md) for details on how this works.
-
-**Important**: We do not accept translation changes as GitHub pull requests because the next
-pull from Transifex would automatically overwrite them again.

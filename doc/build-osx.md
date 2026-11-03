@@ -31,7 +31,7 @@ brew install librsvg
 ```
 
 The wallet support requires one or both of the dependencies ([*SQLite*](#sqlite) and [*Berkeley DB*](#berkeley-db)) in the sections below.
-To build Bitcoin Core without wallet, see [*Disable-wallet mode*](#disable-wallet-mode).
+To build USFranc Core without wallet, see [*Disable-wallet mode*](#disable-wallet-mode).
 
 #### SQLite
 
@@ -62,17 +62,17 @@ Also, the Homebrew package could be installed:
 brew install berkeley-db4
 ```
 
-## Build Litecoin Core
+## Build USFranc Core
 
-1. Clone the Litecoin Core source code:
+1. Clone the USFranc Core source code:
     ```shell
-    git clone https://github.com/litecoin-project/litecoin
-    cd litecoin
+    git clone https://github.com/USFRANC-CORE/usfranc
+    cd usfranc
     ```
 
-2.  Build Litecoin Core:
+2. Build USFranc Core:
 
-    Configure and build the headless Litecoin Core binaries as well as the GUI (if Qt is found).
+    Configure and build the headless USFranc Core binaries as well as the GUI (if Qt is found).
 
     You can disable the GUI build by passing `--without-gui` to configure.
     ```shell
@@ -81,18 +81,18 @@ brew install berkeley-db4
     make
     ```
 
-3.  It is recommended to build and run the unit tests:
+3. It is recommended to build and run the unit tests:
     ```shell
     make check
     ```
 
-4.  You can also create a  `.dmg` that contains the `.app` bundle (optional):
+4. You can also create a `.dmg` that contains the `.app` bundle (optional):
     ```shell
     make deploy
     ```
 
 ## Disable-wallet mode
-When the intention is to run only a P2P node without a wallet, Litecoin Core may be
+When the intention is to run only a P2P node without a wallet, USFranc Core may be
 compiled in disable-wallet mode with:
 ```shell
 ./configure --disable-wallet
@@ -103,33 +103,27 @@ In this case there is no dependency on [*Berkeley DB*](#berkeley-db) and [*SQLit
 Mining is also possible in disable-wallet mode using the `getblocktemplate` RPC call.
 
 ## Running
-Litecoin Core is now available at `./src/litecoind`
+USFranc Core is now available at `./src/usfrancd`
 
 Before running, you may create an empty configuration file:
 ```shell
-mkdir -p "/Users/${USER}/Library/Application Support/Litecoin"
+mkdir -p "/Users/${USER}/Library/Application Support/USFranc"
 
-touch "/Users/${USER}/Library/Application Support/Litecoin/litecoin.conf"
+touch "/Users/${USER}/Library/Application Support/USFranc/usfranc.conf"
 
-chmod 600 "/Users/${USER}/Library/Application Support/Litecoin/litecoin.conf"
+chmod 600 "/Users/${USER}/Library/Application Support/USFranc/usfranc.conf"
 ```
 
-The first time you run litecoind, it will start downloading the blockchain. This process could
-take many hours, or even days on slower than average systems.
+The first time you run `usfrancd`, it will start downloading the blockchain.
 
-You can monitor the download process by looking at the debug.log file:
+You can monitor the download process by looking at the `debug.log` file:
 ```shell
-tail -f $HOME/Library/Application\ Support/Litecoin/debug.log
+tail -f $HOME/Library/Application\ Support/USFranc/debug.log
 ```
 
 ## Other commands:
 ```shell
-./src/litecoind -daemon      # Starts the litecoin daemon.
-./src/litecoin-cli --help    # Outputs a list of command-line options.
-./src/litecoin-cli help      # Outputs a list of RPC commands when the daemon is running.
+./src/usfrancd -daemon      # Starts the USFranc daemon.
+./src/usfranc-cli --help    # Outputs a list of command-line options.
+./src/usfranc-cli help      # Outputs a list of RPC commands when the daemon is running.
 ```
-
-## Notes
-* Tested on OS X 10.14 Mojave through macOS 11 Big Sur on 64-bit Intel
-processors only.
-* Building with downloaded Qt binaries is not officially supported. See the notes in [#7714](https://github.com/bitcoin/bitcoin/issues/7714).

@@ -8,8 +8,8 @@ The `TestShell` submodule extends the `BitcoinTestFramework` functionality to
 external interactive environments for prototyping and educational purposes. Just
 like `BitcoinTestFramework`, the `TestShell` allows the user to:
 
-* Manage regtest bitcoind subprocesses.
-* Access RPC interfaces of the underlying bitcoind instances.
+* Manage regtest `usfrancd` subprocesses.
+* Access RPC interfaces of the underlying `usfrancd` instances.
 * Log events to the functional test logging utility.
 
 The `TestShell` can be useful in interactive environments where it is necessary
@@ -20,21 +20,21 @@ user inputs. Such environments include the Python3 command line interpreter or
 ## 1. Requirements
 
 * Python3
-* `bitcoind` built in the same repository as the `TestShell`.
+* `usfrancd` built in the same repository as the `TestShell`.
 
-## 2. Importing `TestShell` from the Bitcoin Core repository
+## 2. Importing `TestShell` from the USFranc Core repository
 
-We can import the `TestShell` by adding the path of the Bitcoin Core
+We can import the `TestShell` by adding the path of the USFranc Core
 `test_framework` module to the beginning of the PATH variable, and then
 importing the `TestShell` class from the `test_shell` sub-package.
 
 ```
 >>> import sys
->>> sys.path.insert(0, "/path/to/bitcoin/test/functional")
+>>> sys.path.insert(0, "/path/to/usfranc/test/functional")
 >>> from test_framework.test_shell import TestShell
 ```
 
-The following `TestShell` methods manage the lifetime of the underlying bitcoind
+The following `TestShell` methods manage the lifetime of the underlying `usfrancd`
 processes and logging utilities.
 
 * `TestShell.setup()`

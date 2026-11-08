@@ -27,8 +27,56 @@ For more information, as well as binary builds of the USFranc Core software, see
 License
 -------
 
-USFranc Core is released under the terms of the MIT license. See [COPYING](COPYING) for more
-information or see https://opensource.org/licenses/MIT.
+USFranc Core is an independently developed blockchain project derived from the open-source Litecoin Core codebase and released under the terms of the MIT License, subject to the applicable licence conditions of the original source code.
+
+The USFranc development team has extended, modified and further developed the original Litecoin architecture, introducing its own technical innovations, additional functionalities, security enhancements and custom blockchain infrastructure to establish the USFranc network.
+
+Original USFranc Developments
+-------
+Among the principal technological developments introduced by the USFranc project are:
+
+USFranc Limit Price Order Book (LPOB): 
+-------
+An original trading infrastructure developed specifically for the USFranc ecosystem, providing a direct order book mechanism for buyers and sellers.
+
+Liquidity Pool Integration (LP): 
+-------
+A dedicated liquidity mechanism designed to operate alongside the LPOB, supporting market liquidity and facilitating transactions.
+
+Blockchain Architecture: 
+-------
+Additional modifications and developments to the underlying Litecoin-derived blockchain infrastructure.
+
+Security Infrastructure:
+-------
+ Integration of USFranc security developments, including Bitss Web Application Protection (WAP) and VWAR security technologies, where applicable.
+
+USFranc Ecosystem Integration: 
+-------
+Custom infrastructure designed to support the USFranc blockchain, wallet services, trading mechanisms and future ecosystem developments.
+
+Development and Jurisdiction
+-------
+USFranc is a European-based blockchain development project operating within a European and United Kingdom-oriented business and regulatory framework.
+Its development, technical architecture, software enhancements and ecosystem are managed independently, with a dedicated development roadmap and long-term infrastructure objectives.
+
+Open-Source Licensing
+-------
+The original Litecoin-derived components remain subject to their applicable open-source licensing conditions.
+The MIT License permits the use, modification, distribution and commercial use of the licensed code, provided that the required copyright and licence notices are retained.
+Original USFranc contributions are identified separately where applicable. Any components released under the MIT License remain subject to that licence. Components expressly designated as proprietary or separately licensed are governed by their respective intellectual property and licensing terms.
+Nothing in this notice removes or restricts rights granted under the applicable open-source licences.
+
+Licensing Information
+-------
+For further information regarding the licensing terms applicable to USFranc Core, please consult the COPYING file included in this repository.
+The original MIT License is also available at:
+https://opensource.org/licenses/MIT
+Project: USFranc Core
+Ticker: USFF
+Original Blockchain Foundation: Litecoin Core
+Original Trading Innovation: USFranc Limit Price Order Book (LPOB)
+Development: USFranc Development Team
 
 Development Process
 -------------------
@@ -40,31 +88,7 @@ regularly from release branches to indicate new official, stable release version
 The contribution workflow is described in [CONTRIBUTING.md](CONTRIBUTING.md)
 and useful hints for developers can be found in [doc/developer-notes.md](doc/developer-notes.md).
 
-Testing
--------
 
-Testing and code review is the bottleneck for development; we get more pull
-requests than we can review and test on short notice. Please be patient and help out by testing
-other people's pull requests, and remember this is a security-critical project where any mistake might cost people
-lots of money.
-
-### Automated Testing
-
-Developers are strongly encouraged to write [unit tests](src/test/README.md) for new code, and to
-submit new unit tests for old code. Unit tests can be compiled and run
-(assuming they weren't disabled in configure) with: `make check`. Further details on running
-and extending unit tests can be found in [/src/test/README.md](/src/test/README.md).
-
-There are also [regression and integration tests](/test), written
-in Python, that are run automatically on the build server.
-These tests can be run (if the [test dependencies](/test) are installed) with: `test/functional/test_runner.py`
-
-### Manual Quality Assurance (QA) Testing
-
-Changes should be tested by somebody other than the developer who wrote the
-code. This is especially important for large or high-risk changes. It is useful
-to add a test plan to the pull request description if testing the changes is
-not straightforward.
 
 Documentation & Security
 ------------------------

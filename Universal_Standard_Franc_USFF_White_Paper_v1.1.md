@@ -412,6 +412,7 @@ The founders’ right to acquire USFF does not constitute a commitment to purcha
 
 
 <!-- Start of picture text -->
+![USFF LPOB — Dual Routing & LP Protection](doc/images/lpob_architecture.png)
 USFF LPOB — DUAL ROUTING & LP PROTECTION<br>USER SUBMITS BUY OR SELL REQUEST<br>Asset * quantity * conditions<br>LPOB ROUTING ENGINE<br>Checks order book and LP executable quote<br>ORDER BOOK ROUTE LIQUIDITY POOL ROUTE<br>Buyers and sellers match directly Direct buy: payment enters LP, tokens leave<br>Only applicable fees affect LP funding Direct sell: LP pays seller, subject to cap<br>USER CHOOSES<br>Accept the preferred executable route<br>or reject both and keep / retain funds<br>LP funding: 25% of applicable first-sale proceeds + 25% of applicable order-book transaction fees.<br>LP sales are subject to proportional liquidity protection; all accepted trades are validated and settled once.<br><!-- End of picture text -->
 
 # **Protocol at a Glance** 

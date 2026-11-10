@@ -215,6 +215,7 @@ _Part H – Information on the underlying technology_
 | **H.9** | **Audit outcome** | Please see https://github.com/USFRANC/usfranc |
 | **H.10** | **LPOB — LIQUIDITY POOL & ORDER BOOK** | Dual-Route Trading, Automatic LP Funding & Proportional Liquidity Protection — Proposed protocol architecture |
 
+
 ![USFF LPOB — Dual Routing & LP Protection](doc/images/lpob_architecture.png)
 
 # **Protocol at a Glance**
@@ -477,7 +478,1044 @@ The relevant reserve means the quote-asset side of the pool that would be paid t
 |---|
 
 ---
+# **LPOB – LIQUIDITY PROPORTIONAL ORDER BOOK** 
 
+Decentralised Liquidity Protocol, Proportional Redemption and Liquidity Protection Architecture 
+
+### **Developed by Brian Fin for the USFranc Project** 
+
+**Document classification:** USFranc Whitepaper – Additional Technical Chapter 
+
+**Scope of this document:** This is an additional chapter intended to be appended to the existing USFranc Whitepaper. It does not replace, consolidate, amend or remove any existing Whitepaper chapter. 
+
+### **Important clarification concerning the SPUMP security incident and third-party names** 
+
+The SPUMP incident is described solely to explain the technical circumstances that motivated the development of LPOB. No wrongdoing, complicity, negligence or responsibility in relation to the theft is alleged against Solflare, Solana, Circle, USDC, or any other third-party company, protocol, wallet provider, blockchain network or service identified in this chapter. The incident is described as an unauthorised act by a third party. Any wallet, account, platform or service that was unlawfully accessed or misused was itself affected by that unauthorised activity. The description does not assert that the underlying Solflare or Solana infrastructure was itself breached, nor that any named provider caused, authorised or facilitated the theft. All third-party names are used only for factual identification and technical context. 
+
+## **PART I – ORIGIN, OBJECTIVES AND TECHNOLOGICAL CONCEPT** 
+
+### **1. Introduction and Origin of LPOB** 
+
+The LPOB (Liquidity Proportional Order Book) system was conceived and developed by Brian Fin for the USFranc project to address structural weaknesses identified in conventional cryptocurrency liquidity pool systems. 
+
+The development of LPOB was motivated by the risks associated with conventional Automated Market Maker (AMM) models, particularly their exposure to large individual sell transactions, coordinated market activity, liquidity manipulation and malicious exploitation. 
+
+Conventional liquidity pool systems allow participants to execute transactions directly against available pool reserves. Depending on the pool's liquidity, pricing formula and transaction parameters, a single large seller can extract a substantial proportion of the available reserve asset. This can severely destabilise the pool, create extreme price deterioration and leave smaller holders exposed to substantial financial losses. 
+
+USFranc Whitepaper – LPOB Technical Extension 
+
+
+The need for an alternative liquidity mechanism became particularly apparent following an incident involving the SPUMP project, also developed by Brian Fin. 
+
+A security incident resulted in the theft of approximately 2.3 billion SPUMP tokens from a wallet using Solflare. At the time, the stolen tokens represented an estimated market value of €300,000, calculated using the prevailing liquidity-pool price. 
+
+The stolen tokens were subsequently sold into the conventional SPUMP/SOL liquidity pool on Solana. The sale transactions consumed the available SOL liquidity, effectively depleting the pool, causing a severe collapse in the token's market price and leaving remaining holders exposed to substantial losses. 
+
+The estimated €300,000 figure represents a market-price calculation, not a representation that this amount of cash or SOL was available to be extracted from the pool. 
+
+In response, Brian Fin intervened by purchasing SPUMP tokens at the significantly reduced market price and replenishing the depleted liquidity. 
+
+This experience demonstrated a vulnerability of conventional liquidity pool mechanics: a large transaction, including one involving stolen tokens, can consume a substantial amount of available reserve liquidity and severely affect the financial position of remaining participants, particularly smaller holders. 
+
+LPOB was subsequently developed as an alternative approach to liquidity allocation and redemption, with the primary objective of reducing this exposure and establishing a more proportionate and controlled liquidity mechanism. 
+
+### **2. The Fundamental Problem with Conventional AMM Liquidity Pools** 
+
+Conventional Automated Market Maker liquidity pools generally operate using a mathematical relationship between two or more assets deposited into a shared liquidity reserve. 
+
+When a participant sells a token into such a pool, the automated mechanism exchanges the deposited token against the available counter-asset, subject to the pool's pricing formula, available reserves, fees and transaction slippage limits. 
+
+Although this model provides automated trading and continuous market pricing, it presents several structural risks. 
+
+### **2.1 Large-holder liquidity extraction** 
+
+A large token holder can submit a substantial sell transaction against the available pool liquidity. The AMM executes the transaction according to its pricing mechanism, potentially transferring a substantial amount of the reserve asset to the seller. The transaction can therefore have a disproportionate impact on the remaining pool. 
+
+### **2.2 Liquidity depletion** 
+
+Where a pool contains a limited quantity of its counter-asset, a sufficiently large transaction can extract a substantial portion of that reserve. The remaining pool may no longer provide sufficient liquidity to support normal trading activity at previously observed prices. 
+
+### **2.3 Price deterioration** 
+
+As the reserve ratio changes, the AMM's pricing mechanism produces a different execution price. Large transactions can therefore create significant price deterioration, making the token appear to have lost a substantial proportion of its value. 
+
+### **2.4 Exposure of smaller holders** 
+
+Smaller holders who have not sold their tokens may experience substantial financial losses. They remain exposed to the deteriorated market price and the reduced liquidity available to support subsequent transactions. 
+
+USFranc Whitepaper – LPOB Technical Extension 
+
+
+### **2.5 Malicious exploitation** 
+
+A malicious actor holding stolen tokens may exploit the conventional liquidity mechanism to extract available reserve assets. The pool's automated execution does not necessarily distinguish between tokens obtained legitimately and tokens obtained through theft. 
+
+### **2.6 Limitations of slippage protection** 
+
+Slippage limits generally protect the execution conditions of an individual transaction. They do not necessarily preserve the overall liquidity reserve or guarantee that smaller holders will retain access to a proportionate share of the remaining liquidity. 
+
+LPOB was developed to address these structural weaknesses through a different liquidity allocation and redemption principle. 
+
+### **3. Development Motivation: The SPUMP Security Incident** 
+
+The SPUMP incident provided the practical motivation for developing an alternative liquidity architecture. 
+
+The incident demonstrated that the market value displayed by a conventional liquidity pool does not necessarily represent the amount of counter-asset that can actually be extracted from that pool. 
+
+A token position may display a theoretical market value of €300,000 while the actual available counter-asset reserve is substantially different. 
+
+When a large quantity of stolen tokens was sold into the SPUMP/SOL liquidity pool, the conventional AMM mechanism allowed the transactions to consume the available SOL liquidity. 
+
+The consequences included: 
+
+- Severe depletion of the available SOL reserve. 
+
+- A substantial imbalance in the remaining pool. 
+
+- A collapse in the token's market price. 
+
+- Significant exposure for remaining holders. 
+
+- Loss of confidence in the pool's ability to support normal trading. 
+
+Brian Fin subsequently purchased SPUMP tokens at the reduced market price and replenished the depleted liquidity. 
+
+The experience highlighted the need for a liquidity mechanism in which the amount of reserve liquidity accessible to an individual holder is determined by proportional entitlement rather than unrestricted access to the available pool through conventional selling mechanics. 
+
+LPOB was developed to address this requirement. 
+
+## **PART II – LPOB ARCHITECTURE AND MATHEMATICAL PRINCIPLES** 
+
+### **4. LPOB – Decentralised Liquidity Protocol** 
+
+LPOB introduces a decentralised liquidity management and proportional redemption mechanism designed to provide an alternative to conventional AMM pool structures. 
+
+USFranc Whitepaper – LPOB Technical Extension 
+
+
+Rather than allowing an individual seller to extract an unrestricted quantity of the available reserve asset through conventional market-selling mechanics, LPOB applies predetermined mathematical rules to calculate the proportional liquidity entitlement associated with the participating holder's position. 
+
+The mechanism is governed by its smart-contract programming and operates according to its defined protocol rules. 
+
+The fundamental principle is that a holder's proportion of the applicable total minted token supply determines their corresponding proportional entitlement to the available liquidity reserve. 
+
+The principal objectives are: 
+
+**1.** Establish proportional access to available liquidity. 
+
+**2.** Reduce disproportionate reserve extraction by individual participants. 
+
+**3.** Maintain a defined mathematical relationship between token supply and available liquidity. 
+
+**4.** Provide transparent redemption calculations. 
+
+**5.** Reduce the exposure of smaller holders to large individual sell transactions. 
+
+**6.** Establish an alternative to conventional AMM liquidity extraction. 
+
+**7.** Operate through autonomous smart-contract execution without discretionary custodial intervention by AFFIN. 
+
+LPOB is not simply a conventional AMM with additional transaction restrictions. It introduces a different approach to liquidity allocation, in which proportional entitlement is central to the mechanism. 
+
+### **5. The LPOB Mathematical Principle** 
+
+The central calculation of LPOB is based on the relationship between: 
+
+- The quantity of tokens presented for redemption. 
+
+- The total minted token supply. 
+
+- The available counter-asset liquidity within the pool. 
+
+The protocol determines the seller's proportional entitlement by comparing the quantity of tokens being redeemed against the applicable total minted supply. 
+
+### **5.1 Core formula** 
+
+The mathematical principle is expressed as follows: 
+
+### **P = T** ■ **/ T** ■ 
+
+Where: 
+
+- **P** = Seller's proportional share. 
+
+- **T** ■ = Quantity of tokens submitted for redemption. 
+
+- **T** ■ = Applicable total minted token supply. 
+
+The corresponding liquidity entitlement is calculated as follows: 
+
+### **R = P × L** 
+
+Where: 
+
+- **R** = Gross proportional redemption entitlement. 
+
+- **P** = Seller's proportional share. 
+
+USFranc Whitepaper – LPOB Technical Extension 
+
+
+#### • **L** = Available counter-asset liquidity in the pool. 
+
+The combined formula is: 
+
+### **R = (T** ■ **/ T** ■ **) × L** 
+
+This is the fundamental proportional liquidity calculation described for LPOB. 
+
+The calculation uses the applicable total minted token supply as its denominator, rather than simply allowing the seller to extract an unrestricted amount of the pool's counter-asset. 
+
+The exact definition of total minted supply, including the treatment of burned, locked, treasury-held or excluded tokens, must follow the deployed protocol's supply-accounting rules. 
+
+### **5.2 Illustrative calculation** 
+
+Consider the following hypothetical example: 
+
+|Parameter|Value|
+|---|---|
+|Total minted USFF supply|1,000,000 USFF|
+|Seller's USFF position submitted|10,000 USFF|
+|Seller's proportional share|1%|
+|Available USDC liquidity|100,000 USDC|
+|Gross proportional redemption|1,000 USDC|
+
+
+
+The calculation is: 
+
+### **10,000 / 1,000,000 = 1%** 
+
+Therefore: 
+
+### **100,000 × 1% = 1,000 USDC** 
+
+The holder presenting 10,000 USFF is entitled to a gross proportional allocation of 1,000 USDC under this illustrative calculation. 
+
+The calculation is independent of the theoretical market value of the submitted tokens. 
+
+The seller's entitlement is determined by the LPOB formula and the available liquidity at the time of execution. 
+
+This example excludes transaction fees and assumes the entire stated pool reserve is available for the calculation. 
+
+### **5.3 Why the total minted supply matters** 
+
+The total minted supply provides the reference denominator for determining proportional liquidity entitlement. 
+
+This establishes a mathematical relationship between the token supply and the reserve available for redemption. 
+
+It is important to distinguish total minted supply from circulating supply. The two figures may differ where tokens are held in treasury wallets, locked allocations or other excluded categories. 
+
+The protocol must consistently apply the supply definition programmed into the smart contract. 
+
+Any additional minting, burning or supply adjustment must be accounted for according to the contract's defined rules. 
+
+USFranc Whitepaper – LPOB Technical Extension 
+
+
+### **5.4 Dynamic liquidity calculation** 
+
+The available liquidity reserve can change as deposits, withdrawals and redemptions occur. Consequently, the calculation uses the available reserve at the time the transaction is executed. 
+
+For example, if the pool initially contains 100,000 USDC and a qualifying redemption removes 1,000 USDC, the remaining reserve becomes 99,000 USDC. 
+
+Subsequent redemption calculations must use the applicable remaining liquidity rather than the original reserve. 
+
+This creates a transparent relationship between the pool's actual available liquidity and subsequent proportional calculations. 
+
+### **6. Proportional Redemption and Settlement** 
+
+LPOB is designed to calculate the seller's proportional entitlement through its smart-contract mechanics. 
+
+The intended process is: 
+
+**1.** The holder connects their compatible wallet. 
+
+**2.** The holder submits the quantity of USFF intended for redemption. 
+
+**3.** The smart contract identifies the applicable total minted supply. 
+
+**4.** The contract reads the available USDC liquidity. 
+
+**5.** The proportional entitlement is calculated. 
+
+**6.** The contract applies the programmed validation and execution rules. 
+
+**7.** The qualifying USDC amount is settled according to the contract's redemption mechanism. 
+
+**8.** The remaining pool liquidity is updated. 
+
+**9.** The redeemed token quantity is processed according to the contract's defined token-accounting rules. 
+
+The smart contract determines the permitted transaction outcome. 
+
+AFFIN does not manually determine the individual seller's entitlement or approve the redemption as a discretionary custodial process. 
+
+The disposition of redeemed USFF, including whether tokens are burned, transferred or otherwise accounted for, is governed by the deployed contract implementation. 
+
+The protocol must ensure that the token accounting and reserve accounting remain consistent. 
+
+### **7. Proportional Liquidity and Sequential Redemptions** 
+
+One of the important characteristics of LPOB is that liquidity calculations reflect the pool's actual remaining reserve. 
+
+Where a redemption is completed, the available liquidity changes. A subsequent participant's calculation is therefore based on the remaining reserve at the time of that subsequent transaction. 
+
+This is intended to avoid calculations that rely on outdated liquidity figures. 
+
+For example: 
+
+|Transaction|Available USDC|1% proportional amount|
+|---|---|---|
+|Initial pool|100,000|1,000|
+|After first 1% redemption|99,000|990|
+
+
+
+USFranc Whitepaper – LPOB Technical Extension 
+
+
+|Transaction|Available USDC|1% proportional amount|
+|---|---|---|
+|After second 1% redemption|98,010|980.10|
+
+
+
+This is an illustrative sequential calculation using the same 1% reference proportion at each stage. 
+
+It demonstrates how the calculation responds to the actual remaining pool liquidity. It does not represent a guaranteed payout schedule or a promise that the same percentage of the original reserve remains available indefinitely. 
+
+### **8. Transaction Validation and Execution** 
+
+The smart contract must validate each redemption transaction before executing the corresponding liquidity allocation. 
+
+Relevant validation considerations include: 
+
+- Verification of the token quantity submitted. 
+
+- Verification of the applicable supply denominator. 
+
+- Verification of available USDC reserves. 
+
+- Verification of the proportional calculation. 
+
+- Prevention of invalid or repeated transaction execution. 
+
+- Prevention of arithmetic overflow or rounding manipulation. 
+
+- Enforcement of the contract's permitted redemption conditions. 
+
+- Accurate accounting of token and reserve movements. 
+
+All calculations must be executed using the actual on-chain values and the contract's defined precision and rounding rules. 
+
+Transactions should be atomic wherever the underlying blockchain permits, meaning that the relevant token and reserve movements either complete according to the contract's conditions or fail without partially completing the intended settlement. 
+
+### **9. Liquidity Insufficiency and Reserve Conditions** 
+
+LPOB cannot create liquidity that does not exist. 
+
+Where the available USDC reserve is insufficient to meet the calculated redemption entitlement, the protocol must follow its predetermined insufficient-liquidity rules. 
+
+Depending on the implemented contract design, these rules may include: 
+
+- Rejecting a redemption that cannot be fulfilled. 
+
+- Limiting the redemption to an expressly defined available amount. 
+
+- Applying a transparent transaction or reserve limit. 
+
+- Requiring the holder to submit a smaller redemption quantity. 
+
+The contract must not represent an unfulfilled redemption entitlement as an amount of USDC already available for payment. 
+
+This distinction is essential for transparent liquidity accounting and the protection of participants. 
+
+USFranc Whitepaper – LPOB Technical Extension 
+
+
+## **PART III – MARKET TRADING AND EXCHANGE INDEPENDENCE** 
+
+### **10. Compatibility with Normal Market Trading** 
+
+LPOB is designed to operate independently of conventional market trading activities conducted through cryptocurrency exchanges and decentralised trading platforms. 
+
+The protocol does not seek to control, restrict or interfere with normal market trading based on supply and demand. 
+
+USFF holders remain free to trade their tokens through supported centralised exchanges, decentralised exchanges (DEXs), conventional order books or other permitted trading arrangements. 
+
+Market prices established through these trading environments continue to be determined by the interaction of buyers and sellers, available market liquidity, submitted orders and prevailing market demand and supply. 
+
+LPOB does not: 
+
+- Impose a fixed market price on USFF. 
+
+- Dictate exchange trading prices. 
+
+- Control independent exchange order books. 
+
+- Prevent buyers and sellers from negotiating transactions. 
+
+- Determine the market price on external trading platforms. 
+
+- Require external exchanges to adopt LPOB. 
+
+- Interfere with independent market-making activities. 
+
+Its specific function is to provide a separate proportional liquidity allocation and redemption mechanism for the designated USFF/USDC liquidity pool. 
+
+### **10.1 Two separate mechanisms** 
+
+USFranc distinguishes between two separate financial mechanisms. 
+
+### **A. Normal market trading** 
+
+Buyers and sellers determine market prices through supply and demand, whether through: 
+
+- Centralised exchange order books. 
+
+- Decentralised exchange order books. 
+
+- Automated market maker pools. 
+
+- Other supported trading arrangements. 
+
+The market price is determined by the trading activity and liquidity available in the relevant market. 
+
+### **B. LPOB liquidity mechanism** 
+
+The LPOB smart contract applies its predetermined mathematical rules to proportional liquidity allocation and redemption within the designated USFF/USDC pool. 
+
+The two mechanisms serve different purposes. 
+
+Normal exchange trading establishes market prices through trading activity, while LPOB establishes proportional entitlement to its designated liquidity reserve. 
+
+USFranc Whitepaper – LPOB Technical Extension 
+
+
+### **10.2 Market price versus proportional redemption value** 
+
+A distinction must be maintained between: 
+
+- The market price of USFF on an exchange. 
+
+- The available USDC liquidity within the LPOB pool. 
+
+- The proportional redemption entitlement calculated by the LPOB formula. 
+
+These values are not necessarily identical. 
+
+For example, an exchange may display a market price of 1 USDC per USFF while the LPOB pool's proportional redemption calculation produces a different effective amount. 
+
+This may occur because external market prices and pool reserves are determined through different mechanisms. 
+
+Market arbitrage may occur when differences arise between trading environments. 
+
+LPOB does not guarantee that its redemption value will match the price displayed by an external exchange. 
+
+### **10.3 Independent order-book operation** 
+
+LPOB does not function as a centralised exchange order-matching operator. 
+
+Its name, Liquidity Proportional Order Book, identifies its proportional liquidity allocation and redemption architecture. 
+
+It does not imply that LPOB controls every market order or maintains the conventional central limit order book of an exchange. 
+
+Independent exchange order books remain free to match buyers and sellers according to their own operating rules. 
+
+This separation allows USFF to participate in conventional cryptocurrency trading while retaining its separate LPOB liquidity mechanism. 
+
+## **PART IV – DECENTRALISATION, CUSTODY AND SECURITY** 
+
+### **11. Decentralised and Non-Custodial Smart-Contract Architecture** 
+
+LPOB is designed as a Decentralised Liquidity Protocol operating through autonomous smart-contract mechanics. 
+
+The USFF/USDC liquidity pool is controlled by its smart contract rather than by a centralised custodial wallet operated by AFFIN. 
+
+The USDC reserve remains within the smart-contract-controlled liquidity environment and is not held in an AFFIN-controlled customer custody account. 
+
+AFFIN does not take possession of the liquidity reserve or exercise discretionary approval over individual redemption transactions. 
+
+The protocol's liquidity allocation and redemption processes are determined by its programmed mathematical 
+
+rules. Under the intended operating architecture: 
+
+- Liquidity remains within the smart-contract-controlled pool. 
+
+- Transactions are executed according to predetermined contract mechanics. 
+
+- Redemption calculations are performed by the protocol. 
+
+USFranc Whitepaper – LPOB Technical Extension 
+
+
+- AFFIN does not manually approve or redirect individual withdrawals. 
+
+- No centralised administrator is intended to have discretionary control over participants' liquidity. 
+
+- The protocol does not depend on a centralised custodian to execute its normal liquidity operations. 
+
+The architecture is designed to avoid centralised custody of liquidity reserves by AFFIN or a governmental body through the normal operation of the protocol. 
+
+This does not mean that the protocol is outside the reach of applicable law, court orders or other lawful regulatory measures. 
+
+Its actual decentralisation characteristics must be supported by the deployed smart-contract configuration and operational structure. 
+
+### **12. Smart-Contract Autonomy and Administrative Permissions** 
+
+The reliability of LPOB depends on the actual permissions and controls implemented in its smart 
+
+contract. The intended architecture is based on autonomous execution rather than discretionary 
+
+management. 
+
+The following permissions must be identified and documented: 
+
+### **12.1 Contract administration** 
+
+Whether any administrator possesses the ability to modify protocol operations after deployment. 
+
+### **12.2 Upgradeability** 
+
+Whether the contract is immutable or whether an upgrade mechanism exists. 
+
+### **12.3 Emergency controls** 
+
+Whether any emergency pause, recovery or intervention functions are programmed. 
+
+### **12.4 Withdrawal permissions** 
+
+Whether liquidity can be withdrawn only according to the protocol's programmed conditions or whether additional privileged withdrawal permissions exist. 
+
+### **12.5 Supply management** 
+
+Whether the contract can independently verify the relevant token supply or relies on an external token contract. 
+
+### **12.6 Operational independence** 
+
+Whether AFFIN, developers or another party can interfere with individual redemption calculations or settlement. 
+
+These matters must be accurately disclosed according to the deployed code. 
+
+The description of LPOB as autonomous and non-custodial is intended to reflect its actual technical operation, not merely its design objective. 
+
+### **13. Security and Manipulation Resistance** 
+
+LPOB is designed to reduce specific liquidity vulnerabilities associated with conventional AMM selling mechanics. 
+
+Its proportional calculation is intended to reduce the ability of a single participant to obtain an unrestricted amount of the available reserve through a large sell transaction. 
+
+However, the protocol must also consider other potential security risks. 
+
+USFranc Whitepaper – LPOB Technical Extension 
+
+
+#### These include: 
+
+- Stolen or compromised wallets. 
+
+- Private-key theft. 
+
+- Repeated or conflicting redemption requests. 
+
+- Incorrect token-supply accounting. 
+
+- Smart-contract vulnerabilities. 
+
+- Arithmetic manipulation. 
+
+- Malicious token contracts. 
+
+- Denial-of-service attacks. 
+
+- Network congestion. 
+
+- Exploitation of upgrade or administrative permissions, where present. 
+
+The use of a proportional formula does not automatically protect a smart contract against every possible exploit. 
+
+Independent security reviews, code verification, transaction testing and continuous monitoring of publicly observable blockchain activity are therefore important components of responsible protocol development. 
+
+### **14. Liquidity Ownership and Transparency** 
+
+The protocol should maintain transparent accounting of the assets held within its liquidity environment. 
+
+The USDC reserve must be distinguishable from any assets held by AFFIN, USFranc Ltd or other associated companies. 
+
+The on-chain architecture should allow participants to inspect relevant information, including: 
+
+- Contract addresses. 
+
+- USFF token supply. 
+
+- Available USDC reserves. 
+
+- Redemption transactions. 
+
+- Liquidity additions and withdrawals. 
+
+- Contract permissions. 
+
+- Relevant transaction histories. 
+
+Public blockchain records can provide an independently verifiable record of executed transactions. 
+
+However, on-chain visibility does not independently establish the legal ownership of every asset or the identity of every participant. 
+
+Appropriate legal and accounting documentation remains necessary. 
+
+USFranc Whitepaper – LPOB Technical Extension 
+
+
+## **PART V – USFRANC LIQUIDITY AND ECOSYSTEM STRUCTURE** 
+
+### **15. USFF/USDC Liquidity Environment** 
+
+The initial LPOB implementation within the USFranc ecosystem uses a USFF/USDC liquidity arrangement. 
+
+USDC serves as the counter-asset and liquidity reserve within the smart-contract-controlled pool. 
+
+This arrangement is designed to provide a defined reserve asset against which the LPOB proportional liquidity mechanism operates. 
+
+The principal characteristics include: 
+
+- USFF as the USFranc ecosystem asset. 
+
+- USDC as the liquidity reserve and counter-asset. 
+
+- Smart-contract-controlled liquidity. 
+
+- Proportional liquidity allocation and redemption. 
+
+- No discretionary AFFIN custody of the reserve. 
+
+- Transparent on-chain transaction execution, subject to blockchain network capabilities. 
+
+The separation between AFFIN's technology development responsibilities and the smart contract's autonomous liquidity execution is a fundamental characteristic of the intended architecture. 
+
+### **16. Distinction Between SPUMP/SOL and USFF/USDC Liquidity Environments** 
+
+The development of LPOB originated from experience with the SPUMP project and conventional Solana liquidity pool mechanics. 
+
+The SPUMP/SOL pool and the USFF/USDC LPOB pool must be distinguished. 
+
+The SPUMP/SOL pool operated using conventional liquidity pool mechanics and experienced the liquidity depletion incident described in this chapter. 
+
+USFF/USDC uses the LPOB proportional liquidity architecture developed for USFranc. 
+
+The two environments should not be described as operating under the same liquidity 
+
+rules. 
+
+The SPUMP incident demonstrates the problem that motivated LPOB, while the USFF/USDC implementation represents the alternative mechanism developed in response. 
+
+No allegation of wrongdoing, complicity, negligence or responsibility in relation to the SPUMP incident is made against Solflare, Solana, Circle, USDC or any other third-party provider, protocol or service identified in this chapter. The theft and subsequent transactions are described as actions of an unauthorised third party. The mention of these names is solely for factual identification and technical context. 
+
+## **PART VI – FUTURE RESERVE SAFEGUARDING** 
+
+### **17. Future Liquidity Safeguarding and Regulatory Development** 
+
+The initial LPOB architecture is designed to operate as a decentralised, non-custodial liquidity protocol, with USDC reserves remaining within the smart-contract-controlled pool. 
+
+USFranc Whitepaper – LPOB Technical Extension 
+
+
+However, USFranc recognises that as the ecosystem develops and liquidity reserves reach substantial levels, additional financial safeguarding arrangements may become appropriate. 
+
+The long-term objective is to strengthen reserve security while preserving the fundamental principles of proportional liquidity allocation and transparent redemption. 
+
+Accordingly, once liquidity reserves reach significant levels, the USFranc administration intends to evaluate the introduction of additional regulated reserve safeguarding arrangements. 
+
+Subject to applicable regulatory requirements, legal assessment and obtaining the necessary authorisations, this may involve seeking an appropriate regulatory framework under the European Union's Markets in CryptoAssets Regulation (MiCA) or other applicable financial regulatory regimes. 
+
+A future safeguarding arrangement may involve transferring a defined portion of eligible liquidity reserves from the smart-contract environment into segregated bank deposit accounts maintained with appropriately authorised financial institutions. 
+
+Such an arrangement would introduce an additional institutional safeguarding layer for the portion of reserves held outside the blockchain environment. 
+
+This would be a potential evolution of the reserve structure rather than an automatic feature of the initial LPOB protocol. 
+
+### **18. Potential Bank-Deposit Reserve Structure** 
+
+Where a future regulated arrangement is introduced, USFranc may consider dividing eligible liquidity reserves between two environments. 
+
+### **A. On-chain liquidity reserves** 
+
+The portion retained within the smart-contract-controlled pool would remain available for automated LPOB execution, subject to its mathematical redemption rules and available liquidity. 
+
+### **B. Bank-held safeguarding reserves** 
+
+A separately identified portion may be maintained in segregated bank deposit accounts, subject to the relevant legal structure, regulatory authorisations and banking arrangements. 
+
+The purpose of such an arrangement would be to introduce an additional institutional safeguarding layer for part of the ecosystem's reserves. 
+
+The bank-held portion would not automatically constitute immediately available LPOB liquidity. 
+
+Its legal ownership, accessibility, withdrawal conditions and relationship with the pool's participants would need to be established before implementation. 
+
+Any movement of reserves between the on-chain and bank-held environments must be properly authorised, recorded and accounted for. 
+
+The administration must not represent bank-held reserves as immediately redeemable on-chain liquidity unless the necessary transfer and settlement arrangements are in place. 
+
+### **19. Potential Impact on Redemption and Payout Times** 
+
+The administration recognises that transferring a portion of liquidity reserves into bank deposit accounts could affect the operational characteristics of the LPOB mechanism. 
+
+Liquidity held directly within a smart-contract pool may be accessible through automated on-chain execution, subject to the protocol's redemption rules. 
+
+USFranc Whitepaper – LPOB Technical Extension 
+
+
+By contrast, liquidity maintained in bank deposits may require additional procedures, including: 
+
+- Banking settlement. 
+
+- Compliance verification. 
+
+- Transfer processing. 
+
+- Reserve reconciliation. 
+
+- Movement of funds back into an authorised liquidity environment. 
+
+- Additional operational approval where required by the regulated arrangement. 
+
+Consequently, redemption and payout times may become longer where the requested liquidity depends on bank-held reserves rather than immediately available on-chain liquidity. 
+
+Any future arrangement would require clearly defined redemption procedures, reserve availability disclosures and transparent communication of applicable settlement periods. 
+
+The administration intends to preserve a distinction between immediately accessible on-chain liquidity and any additional reserves maintained through regulated banking arrangements. 
+
+No future reserve transfer or modification of redemption arrangements should be interpreted as an automatic guarantee of liquidity or a fixed payout period. 
+
+Any material change to the LPOB operating model would be subject to applicable legal and regulatory requirements and the relevant protocol governance and implementation arrangements. 
+
+### **20. Transition from Fully On-Chain Liquidity to a Hybrid Reserve Model** 
+
+The introduction of bank-held reserves would represent a potential transition from an entirely on-chain liquidity arrangement towards a hybrid reserve structure. 
+
+Such a transition would require a clear distinction between: 
+
+**1.** Liquidity immediately available to the LPOB smart contract. 
+
+**2.** Liquidity maintained in bank deposits. 
+
+**3.** Assets legally allocated to participants. 
+
+**4.** Assets available for operational and settlement purposes. 
+
+The administration would need to determine how any bank-held reserves are represented in the protocol's accounting and whether the smart contract requires any changes. 
+
+Any changes to the original contract must respect its actual immutability and upgradeability characteristics. 
+
+Where the existing smart contract cannot be modified, any future hybrid arrangement may require a separate regulated structure or additional protocol deployment rather than an alteration of the existing contract. 
+
+The transition must not create an inaccurate representation of available liquidity or imply that bank-held assets are automatically accessible through the original smart contract. 
+
+The purpose of this future development is to strengthen long-term reserve safeguarding while maintaining transparent proportional liquidity principles. 
+
+USFranc Whitepaper – LPOB Technical Extension 
+
+
+## **PART VII – REGULATORY FRAMEWORK AND DISCLOSURES** 
+
+### **21. Regulatory Classification and MiCA Considerations** 
+
+LPOB is designed as decentralised blockchain technology rather than a conventional centralised custodial exchange. 
+
+Its non-custodial architecture is intended to distinguish the development and deployment of autonomous liquidity infrastructure from the provision of centralised custody services. 
+
+The European Union's Markets in Crypto-Assets Regulation (MiCA) provides a specific framework for crypto-asset issuance and crypto-asset services. 
+
+Article 2(2) of MiCA addresses services provided in a fully decentralised manner without an intermediary. 
+
+The potential application of this exclusion to LPOB must be assessed against the actual technical and operational structure of the protocol. 
+
+Relevant considerations include: 
+
+- Who develops and deploys the protocol. 
+
+- Who controls its smart contracts. 
+
+- Whether an administrator can intervene. 
+
+- Who supplies and owns the liquidity. 
+
+- Whether AFFIN provides an exchange or redemption service. 
+
+- Whether a central intermediary is involved. 
+
+- Whether any associated entity exercises operational control. 
+
+- Whether the protocol is genuinely autonomous in its operation. 
+
+The use of smart contracts and the absence of direct custody do not, on their own, establish an exemption from regulatory requirements. 
+
+The regulatory classification of USFF must also be considered independently. 
+
+Depending on its characteristics and rights, USFF may fall under the MiCA framework applicable to other crypto-assets, asset-referenced tokens or e-money tokens. 
+
+If USFF qualifies as an asset-referenced token or e-money token, specific issuer authorisation, reserve, redemption and safeguarding requirements may apply. 
+
+The intended future bank-deposit arrangements must therefore be assessed against the applicable classification and legal requirements. 
+
+### **22. Separation of Technology Development and Regulated Financial Services** 
+
+The development of decentralised blockchain software must be distinguished from the provision of regulated financial services. 
+
+USFranc's development strategy is to establish its blockchain infrastructure and LPOB technology without unnecessarily assuming the operational responsibilities of a conventional bank or centralised custodian. 
+
+However, where regulated financial activities are undertaken, the appropriate authorisations must be obtained. 
+
+Future activities involving custody, exchange services, payment processing, electronic money or reserve management must be assessed according to their actual legal and operational characteristics. 
+
+USFranc Whitepaper – LPOB Technical Extension 
+
+
+Where appropriate, USFranc may use authorised financial service providers for activities that require regulated institutional participation. 
+
+The intention is to develop the technology responsibly while keeping regulatory responsibilities clearly identified and separated. 
+
+### **23. Regulatory Development of Future Reserve Safeguarding** 
+
+If USFranc elects to introduce bank-held reserves, the administration will assess the appropriate regulatory and legal structure before implementation. 
+
+This may involve consultation with relevant financial regulators, legal advisers and authorised banking institutions. 
+
+The objective is to ensure that any future reserve safeguarding structure is legally recognised, appropriately supervised and transparently documented. 
+
+The introduction of such an arrangement must not be represented as an existing regulatory approval or as an automatic consequence of the LPOB protocol. 
+
+All future regulatory developments will be subject to the relevant legal requirements and applicable authorisations. 
+
+## **PART VIII – LIMITATIONS, RISK AND PARTICIPANT DISCLOSURES** 
+
+### **24. Protocol Limitations and Market Risk** 
+
+LPOB introduces an alternative approach to liquidity allocation and redemption. It does not eliminate the risks inherent in cryptocurrency markets. 
+
+Participants must understand that: 
+
+- USFF market prices may fluctuate. 
+
+- External exchange prices may differ from LPOB redemption values. 
+
+- Available pool liquidity may change. 
+
+- Proportional entitlement does not guarantee a fixed monetary value. 
+
+- The pool may become insufficient to satisfy all potential redemption requests. 
+
+- Smart-contract vulnerabilities may result in financial losses. 
+
+- Blockchain congestion may delay transaction execution. 
+
+- Network failures may temporarily prevent transactions. 
+
+- USDC may be subject to issuer, counterparty, regulatory and market risks. 
+
+- Future bank-held reserves may introduce additional settlement periods and counterparty risks. 
+
+The proportional nature of LPOB does not guarantee that all participants can redeem their holdings simultaneously or at the same market value. 
+
+The protocol is intended to reduce the possibility of disproportionate liquidity extraction, not to provide a guaranteed investment return or capital protection. 
+
+USFranc Whitepaper – LPOB Technical Extension 
+
+
+### **25. No Guarantee of Market Price or Liquidity** 
+
+The LPOB mechanism does not establish a guaranteed market price for USFF. 
+
+It does not promise that the value of USFF will remain stable against USDC, fiat currency or any other asset. 
+
+The market value of USFF remains subject to demand, supply, market conditions and trading activity. 
+
+Similarly, the proportional redemption mechanism does not guarantee that the entire theoretical value of a holder's position can be realised at any particular time. 
+
+Redemption is determined by the protocol's mathematical rules and actual available liquidity. 
+
+Participants must distinguish between theoretical market valuation, available pool reserves and the amount that can be redeemed under the protocol. 
+
+### **26. Smart-Contract and Technical Risk** 
+
+LPOB relies on the correct operation of blockchain smart contracts. 
+
+Although the protocol is designed to operate autonomously, software and blockchain systems remain exposed to technical risks. 
+
+These include programming errors, unexpected execution conditions, network-level vulnerabilities and exploits affecting connected contracts or tokens. 
+
+USFranc's development and security processes should include code review, independent audits where appropriate, transaction testing and ongoing technical assessment. 
+
+No smart-contract system can be represented as entirely free from security risk. 
+
+### **27. Reserve and Counterparty Risk** 
+
+The initial LPOB reserve asset is USDC. 
+
+Although USDC is designed to maintain a reference value against the US dollar, its value and redemption availability remain subject to the policies, operational arrangements and financial position of its issuer and the wider market environment. 
+
+Future bank-held reserves may also introduce risks associated with the relevant banking institution, deposit arrangements, access restrictions and applicable insolvency protections. 
+
+The existence of a bank deposit does not automatically mean that every participant has an individually guaranteed or insured deposit. 
+
+Any future safeguarding arrangement must clearly disclose the legal ownership, beneficiaries, applicable protection and limitations of the relevant deposits. 
+
+## **PART IX – DEVELOPMENT ATTRIBUTION AND TECHNOLOGICAL POSITIONING** 
+
+### **28. Development Attribution** 
+
+LPOB was conceived and developed by Brian Fin as an original technological component of the USFranc ecosystem. 
+
+Its development originated from the practical need to address weaknesses observed in conventional cryptocurrency liquidity pool systems and to provide a more proportional approach to liquidity allocation and redemption. 
+
+USFranc Whitepaper – LPOB Technical Extension 
+
+
+The SPUMP security incident provided a practical demonstration of the potential consequences of unrestricted liquidity extraction and the financial exposure experienced by smaller holders. 
+
+LPOB represents the technological response to that experience. 
+
+Its development reflects the objective of creating liquidity infrastructure that places greater emphasis on: 
+
+- Proportional entitlement. 
+
+- Transparent smart-contract execution. 
+
+- Reserve preservation. 
+
+- Fairer treatment of participants. 
+
+- Non-custodial operation. 
+
+- Separation from conventional exchange price discovery. 
+
+- Long-term reserve safeguarding. 
+
+### **USFranc's position is that liquidity infrastructure should not allow the financial interests of a single large participant to disproportionately compromise the remaining participants.** 
+
+LPOB was developed to address this challenge through decentralised, smart-contract-based proportional liquidity management. 
+
+It represents an original technological development within the USFranc project and a fundamental component of its approach to blockchain-based liquidity infrastructure. 
+
+### **29. LPOB as a Distinct Technological Innovation** 
+
+LPOB is intended to establish a distinct approach to liquidity management within the cryptocurrency sector. 
+
+Its defining characteristic is the application of proportional liquidity entitlement based on the relationship between the applicable total minted token supply and the available reserve asset. 
+
+This approach differs from conventional AMM systems, in which a seller's transaction is generally executed against the available pool according to the AMM's pricing curve. 
+
+LPOB places the proportional relationship between token supply and available liquidity at the centre of its redemption design. 
+
+The technology is developed with the intention of supporting: 
+
+- USFranc's own blockchain ecosystem. 
+
+- USFF/USDC liquidity arrangements. 
+
+- Future compatible blockchain implementations, where technically and legally appropriate. 
+
+- Potential integration into other token ecosystems. 
+
+- Additional decentralised liquidity applications. 
+
+Any future third-party implementation would require technical compatibility, independent assessment and compliance with applicable regulatory requirements. 
+
+### **30. Intellectual Property and Development Records** 
+
+The development attribution of LPOB is associated with Brian Fin and the USFranc project. 
+
+USFranc Whitepaper – LPOB Technical Extension 
+
+
+The technical development history, source-code records, mathematical specifications, smart-contract versions and deployment records should be maintained to establish the origin and development of the technology. 
+
+The applicable ownership and licensing arrangements for LPOB software and associated intellectual property will be determined by the relevant development agreements, company ownership arrangements and published software licences. 
+
+The inclusion of LPOB in the USFranc Whitepaper documents its technological purpose, development origin and intended operation. 
+
+It does not by itself constitute a patent grant, trademark registration or independent legal determination of intellectual-property ownership. 
+
+### **31. Third-Party Names and Trademarks** 
+
+All third-party company names, trademarks, blockchain networks, wallet names, products and technologies mentioned in this document are used solely for factual identification, technical description, comparison and informational purposes. 
+
+All such names and trademarks remain the property of their respective owners. 
+
+Their mention does not imply any affiliation, endorsement, sponsorship, partnership or commercial relationship with USFranc, AFFIN or Brian Fin, unless expressly stated otherwise. 
+
+## **CONCLUSION – THE LPOB PRINCIPLE** 
+
+LPOB was developed to address a fundamental weakness in conventional cryptocurrency liquidity pool systems: the ability of a single large participant to extract a disproportionate amount of available reserve liquidity, potentially compromising the remaining pool and exposing smaller holders to severe financial losses. 
+
+Developed by Brian Fin for USFranc, LPOB introduces an alternative decentralised liquidity allocation and proportional redemption architecture. 
+
+Its core principle is that a holder's proportional entitlement to available liquidity is determined through a predefined mathematical relationship between the quantity of tokens presented for redemption, the applicable total minted token supply and the available reserve liquidity. 
+
+The mechanism is designed to operate autonomously through smart contracts, without discretionary custody or approval of liquidity by AFFIN. 
+
+Importantly, LPOB does not interfere with normal cryptocurrency market trading. USFF remains capable of participating in conventional exchange order books and decentralised trading environments where prices are determined independently through market supply and demand. 
+
+LPOB therefore provides a separate liquidity management mechanism alongside normal market trading. 
+
+Looking ahead, USFranc intends to evaluate additional reserve safeguarding arrangements as its liquidity infrastructure develops. Subject to the necessary regulatory framework and authorisations, this may include maintaining a portion of eligible reserves within regulated bank deposit structures, with appropriate disclosure of any resulting changes to redemption and settlement arrangements. 
+
+**LPOB's fundamental objective is to create a more proportional, transparent and controlled approach to liquidity allocation, reducing the potential for individual market participants to disproportionately compromise the financial interests of the wider holder community.** 
+
+USFranc Whitepaper – LPOB Technical Extension 
+
+
+It represents a core technological innovation of the USFranc ecosystem and an alternative approach to conventional cryptocurrency liquidity pool architecture. 
+
+## **END OF LPOB TECHNICAL WHITEPAPER EXTENSION** 
+
+USFranc Whitepaper – LPOB Technical Extension 
+
+---
+## **Where USFF Can Be Traded**
+
+USFF is designed to support an open and flexible trading environment, allowing holders to buy and sell USFF through multiple independent trading channels. The USFF protocol does not require the cryptocurrency to be listed exclusively on any particular exchange or trading platform.
+USFF may be traded through the following channels:
+1. Decentralised Exchanges (DEXs)
+USFF is designed to be accessible through decentralised exchanges (DEXs) that support direct integration with the USFF blockchain and its native trading infrastructure.
+This allows users to trade USFF without relying on a centralised intermediary for the execution and settlement of transactions. DEX connectivity is intended to support open market participation, subject to the technical integration and requirements of each exchange.
+2. Centralised Cryptocurrency Exchanges (CEXs)
+USFF may also be listed and traded on centralised cryptocurrency exchanges that independently choose to support and list USFF.
+USFF adopts a voluntary listing approach and does not intend to pay substantial exchange listing fees or pursue expensive commercial listing agreements. This policy is intended to preserve financial resources, maintain operational independence and avoid unnecessary costs that could otherwise affect the project’s development and economic structure.
+Centralised exchanges remain free to evaluate USFF and determine whether to offer trading services to their customers under their own listing policies.
+3. Direct Order Book Connectivity
+USFF incorporates its own direct Order Book connectivity, enabling compatible trading platforms, exchanges and other approved participants to connect directly to the USFF trading infrastructure.
+This allows participants to submit buy and sell orders through an integrated order book environment without requiring USFF to depend exclusively on third-party exchange listings.
+The system is designed to facilitate transparent order matching between buyers and sellers, while keeping the underlying blockchain settlement independent of the trading platform.
+4. Liquidity Pool and LPOB AMM System
+As an additional trading option, USFF supports a Liquidity Pool (LP) mechanism operating in conjunction with its proprietary Liquidity Pool Order Book (LPOB) architecture and Automated Market Maker (AMM) functionality.
+Through this arrangement, participants may access liquidity directly from the pool, subject to available reserves and the applicable pricing mechanism.
+The LPOB architecture provides an additional liquidity mechanism alongside conventional order book trading. It is designed to coordinate liquidity between the order book and the LP pool according to the protocol’s defined transaction, allocation and fee rules.
+The liquidity pool is an optional trading channel and does not replace conventional market trading or determine the market price independently of market activity.
+5. Independent Market Pricing
+USFF does not impose a fixed exchange price or require all trading activity to take place through its liquidity pool.
+Market prices are determined by the interaction of buyers and sellers, including:
+Supply and demand on decentralised exchanges.
+Supply and demand on centralised exchanges.
+Buy and sell orders submitted through direct Order Book connectivity.
+Liquidity availability and pricing through the LP pool and LPOB AMM mechanism.
+The LPOB system operates as an additional liquidity and order-book coordination mechanism. It does not interfere with independent market transactions conducted through external exchanges.
+6. Low-Cost Blockchain Transactions
+USFF is designed to maintain low blockchain transaction costs by avoiding unnecessary commercial listing expenditure and preserving an efficient native blockchain transaction structure.
+The project does not intend to pass substantial exchange listing expenses on to users through increased blockchain transaction fees.
+Blockchain transaction fees remain governed by the USFF network’s protocol rules and are separate from exchange trading fees, liquidity pool charges and any service fees imposed by third-party platforms.
+Summary
+USFF provides four complementary routes to market:
+Decentralised exchanges (DEXs).
+Voluntary listings on centralised exchanges (CEXs).
+Direct buy and sell Order Book connectivity.
+Optional Liquidity Pool access through the LPOB AMM system.
+This multi-channel approach is intended to provide flexibility, trading accessibility and independent price discovery while maintaining control over the USFF blockchain infrastructure and avoiding unnecessary listing expenditure.
+Important clarification for the whitepaper: Exchange listings, direct integrations and liquidity availability are subject to third-party acceptance, technical compatibility and actual deployment. The availability of these mechanisms does not guarantee liquidity, trading volume or market price.
+
+
+---
 _Part I – Information on risks_
 
 | **No** | **FIELD** | **CONTENT** |

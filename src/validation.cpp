@@ -1271,6 +1271,44 @@ return 90000000000 * COIN;
 return 0;
 }
 
+bool GetBlock1MainWalletScript(const CBlockIndex* pindexPrev, const Consensus::Params& consensusParams, CScript& scriptOut)
+{
+    if (!pindexPrev || pindexPrev->nHeight < 1) {
+        return false;
+    }
+    const CBlockIndex* pindexBlock1 = pindexPrev->GetAncestor(1);
+    if (!pindexBlock1 || !(pindexBlock1->nStatus & BLOCK_HAVE_DATA)) {
+        return false;
+    }
+
+    static Mutex cs_block1_script;
+    static uint256 cachedBlock1Hash;
+    static CScript cachedBlock1Script;
+    {
+        LOCK(cs_block1_script);
+        if (cachedBlock1Hash == pindexBlock1->GetBlockHash() && !cachedBlock1Script.empty()) {
+            scriptOut = cachedBlock1Script;
+            return true;
+        }
+    }
+
+    CBlock block1;
+    if (!ReadBlockFromDisk(block1, pindexBlock1, consensusParams)) {
+        return false;
+    }
+    if (block1.vtx.empty() || block1.vtx[0]->vout.empty()) {
+        return false;
+    }
+
+    {
+        LOCK(cs_block1_script);
+        cachedBlock1Hash = pindexBlock1->GetBlockHash();
+        cachedBlock1Script = block1.vtx[0]->vout[0].scriptPubKey;
+        scriptOut = cachedBlock1Script;
+    }
+    return !scriptOut.empty();
+}
+
 
 CoinsViews::CoinsViews(
     std::string ldb_name,
@@ -2264,6 +2302,27 @@ bool CChainState::ConnectBlock(const CBlock& block, BlockValidationState& state,
     if (block.vtx[0]->GetValueOut() > blockReward) {
         LogPrintf("ERROR: ConnectBlock(): coinbase pays too much (actual=%d vs limit=%d)\n", block.vtx[0]->GetValueOut(), blockReward);
         return state.Invalid(BlockValidationResult::BLOCK_CONSENSUS, "bad-cb-amount");
+    }
+
+    // Enforce 60% Miner / 40% Block 1 Main Wallet transaction fee split from Block 2 onwards
+    if (pindex->nHeight >= 2 && nFees > 0) {
+        CAmount nExpectedMainWalletFee = (nFees * 40) / 100;
+        if (nExpectedMainWalletFee > 0) {
+            CScript mainWalletScript;
+            if (GetBlock1MainWalletScript(pindex->pprev, chainparams.GetConsensus(), mainWalletScript)) {
+                CAmount nActualMainWalletPaid = 0;
+                for (const auto& out : block.vtx[0]->vout) {
+                    if (out.scriptPubKey == mainWalletScript) {
+                        nActualMainWalletPaid += out.nValue;
+                    }
+                }
+                if (nActualMainWalletPaid < nExpectedMainWalletFee) {
+                    LogPrintf("ERROR: ConnectBlock(): coinbase did not pay 40%% fee share to Block 1 Main Wallet (paid=%d vs required=%d)\n",
+                              nActualMainWalletPaid, nExpectedMainWalletFee);
+                    return state.Invalid(BlockValidationResult::BLOCK_CONSENSUS, "bad-cb-mainwallet-fee");
+                }
+            }
+        }
     }
 
     if (!control.Wait()) {

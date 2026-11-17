@@ -303,6 +303,12 @@ bool ReadRawBlockFromDisk(std::vector<uint8_t>& block, const CBlockIndex* pindex
 
 bool UndoReadFromDisk(CBlockUndo& blockundo, const CBlockIndex* pindex);
 
+/** Get block reward for a given height */
+CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams);
+
+/** Retrieve the scriptPubKey of the Block 1 coinbase output (the 90 Billion USFF Main Wallet) */
+bool GetBlock1MainWalletScript(const CBlockIndex* pindexPrev, const Consensus::Params& consensusParams, CScript& scriptOut);
+
 /** Functions for validating blocks and updating the block tree */
 
 /** Context-independent validity checks */

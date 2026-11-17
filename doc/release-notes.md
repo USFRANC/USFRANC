@@ -32,6 +32,7 @@ v0.1.0 Network & Consensus Specifications
 - **Target Block Time:** 150 seconds (2.5 minutes)
 - **Difficulty Adjustment:** Every 2,016 blocks (302,400 seconds / 3.5 days)
 - **Maximum Supply (`MAX_MONEY`):** 90,000,000,000 USFF (100% issued at Block 1; 0 ongoing block subsidy from Block 2+)
+- **Transaction Fee Split (Block 2+):** 60% to the Block Miner | 40% to the Block 1 Main Wallet (`USFRANCMAINWALLET`), enforced by consensus (`bad-cb-mainwallet-fee`)
 - **Coinbase Maturity:** 100 blocks
 - **Genesis Block Hash:** `0xd0305d20bf497f5d4943d54c6a711dfab305368be023454c23e52794a1fdaed4`
 - **Genesis Merkle Root:** `0x791624844c46b68572e0cd521f65e7518c10c2734647521a50c5e18dcf0c7c6b`

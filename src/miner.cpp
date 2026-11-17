@@ -169,12 +169,25 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
     m_last_block_mweb_weight = nBlockMWEBWeight;
 
     // Create coinbase transaction.
+    // From Block 2 onwards, transaction fees are split: 60% to the Miner, 40% to the Block 1 Main Wallet.
     CMutableTransaction coinbaseTx;
     coinbaseTx.vin.resize(1);
     coinbaseTx.vin[0].prevout.SetNull();
-    coinbaseTx.vout.resize(1);
-    coinbaseTx.vout[0].scriptPubKey = scriptPubKeyIn;
-    coinbaseTx.vout[0].nValue = nFees + GetBlockSubsidy(nHeight, chainparams.GetConsensus());
+    CAmount nSubsidy = GetBlockSubsidy(nHeight, chainparams.GetConsensus());
+    CAmount nMainWalletFee = (nHeight >= 2 && nFees > 0) ? (nFees * 40) / 100 : 0;
+    CAmount nMinerFee = nFees - nMainWalletFee;
+    CScript mainWalletScript;
+    if (nMainWalletFee > 0 && GetBlock1MainWalletScript(pindexPrev, chainparams.GetConsensus(), mainWalletScript)) {
+        coinbaseTx.vout.resize(2);
+        coinbaseTx.vout[0].scriptPubKey = scriptPubKeyIn;
+        coinbaseTx.vout[0].nValue = nSubsidy + nMinerFee;
+        coinbaseTx.vout[1].scriptPubKey = mainWalletScript;
+        coinbaseTx.vout[1].nValue = nMainWalletFee;
+    } else {
+        coinbaseTx.vout.resize(1);
+        coinbaseTx.vout[0].scriptPubKey = scriptPubKeyIn;
+        coinbaseTx.vout[0].nValue = nSubsidy + nFees;
+    }
     coinbaseTx.vin[0].scriptSig = CScript() << nHeight << OP_0;
     pblock->vtx[0] = MakeTransactionRef(std::move(coinbaseTx));
     pblocktemplate->vchCoinbaseCommitment = GenerateCoinbaseCommitment(*pblock, pindexPrev, chainparams.GetConsensus());

@@ -15,6 +15,7 @@ USFranc (Universal Standard Franc, ticker: `USFF`) is a decentralized Layer-1 di
 * **Target Block Time:** 150 seconds (2.5 minutes)
 * **Difficulty Retargeting:** Every 2,016 blocks (302,400 seconds / 3.5 days)
 * **Maximum Supply:** 90,000,000,000 USFF (100% issued at Block 1; 0 ongoing block subsidy)
+* **Transaction Fee Split (Block 2+):** 60% to the Block Miner | 40% to the Block 1 Main Wallet (`USFRANCMAINWALLET`), enforced at the consensus level
 * **Decimal Precision:** 8 decimal places (`1 USFF = 100,000,000` base units)
 * **Default Ports (Mainnet):** P2P `19777` | RPC `9332` | Tor `9333`
 * **Address Formats (Mainnet):**
